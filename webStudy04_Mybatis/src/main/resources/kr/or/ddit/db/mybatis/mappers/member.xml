@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.or.ddit.member.dao.IMemberDAO">
+	<sql id="selectMemberFrag">
+		SELECT
+		MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1,
+		MEM_REGNO2,
+		TO_CHAR(MEM_BIR,'YYYY-MM-DD')MEM_BIR, MEM_ZIP, MEM_ADD1,
+		MEM_ADD2,
+		MEM_HOMETEL, MEM_COMTEL, MEM_HP,
+		MEM_MAIL, MEM_JOB, MEM_LIKE,
+		MEM_MEMORIAL,
+		TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD')MEM_MEMORIALDAY,
+		MEM_MILEAGE,
+		MEM_DELETE, MEM_AUTH
+		FROM MEMBER
+	</sql>
+
+	<sql id="searchFrag">
+		<where>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+				<if test="searchType.equals('name')">
+					MEM_NAME like'%'|| #{searchWord} ||'%'
+				</if>
+				<if test="searchType.equals('address')">
+					MEM_ADD1 like'%'|| #{searchWord} ||'%'
+				</if>
+				<if test="searchType.equals('all')">
+					MEM_NAME like'%'|| #{searchWord} ||'%'
+					OR
+					MEM_ADD1 like
+					'%'|| #{searchWord} ||'%'
+				</if>
+			</if>
+		</where>
+	</sql>
+
+
+	<select id="selectTotalRecord" parameterType="pagingVO"
+		resultType="long">
+		SELECT COUNT(*)
+		FROM MEMBER
+		<include refid="kr.or.ddit.member.dao.IMemberDAO.searchFrag" />
+	</select>
+
+	<select id="selectMemberList" parameterType="pagingVO"
+		resultType="memberVO">
+		SELECT B.*
+		FROM (
+		SELECT ROWNUM RNUM, A.*
+		FROM (
+		<include
+			refid="kr.or.ddit.member.dao.IMemberDAO.selectMemberFrag" />
+		<include refid="kr.or.ddit.member.dao.IMemberDAO.searchFrag" />
+		ORDER BY ROWID DESC ) A ) B
+		<![CDATA[
+		WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+		]]>
+	</select>
+
+
+	<resultMap type="memberVO" id="memberMap" autoMapping="true">
+		<id property="mem_id" column="MEM_ID" />
+		<result property="mem_pass" column="MEM_PASS" />
+		<result property="mem_name" column="MEM_NAME" />
+		<result property="mem_regno1" column="MEM_REGNO1" />
+		<result property="mem_regno2" column="MEM_REGNO2" />
+		<result property="mem_bir" column="MEM_BIR" />
+		<result property="mem_zip" column="MEM_ZIP" />
+		<result property="mem_add1" column="MEM_ADD1" />
+		<result property="mem_add2" column="MEM_ADD2" />
+		<result property="mem_hometel" column="MEM_HOMETEL" />
+		<result property="mem_comtel" column="MEM_COMTEL" />
+		<result property="mem_hp" column="MEM_HP" />
+		<result property="mem_mail" column="MEM_MAIL" />
+		<result property="mem_job" column="MEM_JOB" />
+		<result property="mem_like" column="MEM_LIKE" />
+		<result property="mem_memorial" column="MEM_MEMORIAL" />
+		<result property="mem_mileage" column="MEM_MILEAGE" />
+		<result property="mem_delete" column="MEM_DELETE" />
+		<result property="mem_auth" column="MEM_AUTH" />
+
+		<collection property="prodList" resultMap="prodMap"></collection>
+		<!-- <result property="prodList" /> -->
+	</resultMap>
+
+	<resultMap type="prodVO" id="prodMap">
+		<result property="prod_id" column="PROD_ID" />
+		<result property="prod_name" column="PROD_NAME" />
+		<result property="prod_cost" column="PROD_COST" />
+		<result property="prod_price" column="PROD_PRICE" />
+		<result property="prod_outline" column="PROD_OUTLINE" />
+	</resultMap>
+	<select id="selectMember" parameterType="string"
+		resultMap="memberMap">
+		SELECT
+		MEM_ID, MEM_PASS, MEM_NAME, MEM_REGNO1,
+		MEM_REGNO2,
+		TO_CHAR(MEM_BIR,'YYYY-MM-DD')MEM_BIR, MEM_ZIP, MEM_ADD1,
+		MEM_ADD2,
+		MEM_HOMETEL, MEM_COMTEL, MEM_HP,
+		MEM_MAIL, MEM_JOB, MEM_LIKE,
+		MEM_MEMORIAL,
+		TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD')MEM_MEMORIALDAY,
+		MEM_MILEAGE,
+		MEM_DELETE, MEM_AUTH
+		, PROD_ID, PROD_NAME, PROD_COST,
+		PROD_PRICE, PROD_OUTLINE
+		FROM MEMBER LEFT OUTER JOIN CART ON (MEM_ID =
+		CART_MEMBER)
+		LEFT OUTER JOIN PROD ON (CART_PROD = PROD_ID)
+		WHERE MEM_ID
+		= #{mem_id}
+	</select>
+
+	<insert id="insertMember" parameterType="memberVO">
+		INSERT INTO
+		MEMBER (
+		MEM_ID, MEM_PASS, MEM_NAME,
+		MEM_REGNO1, MEM_REGNO2, MEM_BIR,
+		MEM_ZIP,
+		MEM_ADD1, MEM_ADD2,
+		MEM_HOMETEL, MEM_COMTEL, MEM_HP,
+		MEM_MAIL, MEM_JOB,
+		MEM_LIKE, MEM_MEMORIAL,
+		MEM_MEMORIALDAY, MEM_MILEAGE, MEM_AUTH
+		) VALUES
+		(
+		#{mem_id}, #{mem_pass}, #{mem_name},
+		#{mem_regno1},#{mem_regno2},
+		TO_DATE(#{mem_bir},'YYYY-MM-DD'),
+		#{mem_zip},#{mem_add1},#{mem_add2},
+		#{mem_hometel},#{mem_comtel},#{mem_hp},
+		#{mem_mail},#{mem_job},#{mem_like},#{mem_memorial},
+		TO_DATE(#{mem_memorialday}, 'YYYY-MM-DD'), 1000, 'ROLE_USER'
+		)
+	</insert>
+
+
+	<update id="updateMember" parameterType="memberVO">
+		update member 
+		set
+		mem_name=#{mem_name},
+		mem_zip=#{mem_zip},
+		mem_add1=#{mem_add1},
+		mem_add2=#{mem_add2},
+		mem_hometel=#{mem_hometel},
+		mem_comtel=#{mem_comtel},
+		mem_hp=#{mem_hp},
+		mem_mail=#{mem_mail},
+		mem_job=#{mem_job},
+		mem_like=#{mem_like},
+		mem_memorial=#{mem_memorial},
+		mem_memorialday=TO_DATE(#{mem_memorialday}, 'YYYY-MM-DD')
+		where mem_id = #{mem_id}
+	</update>
+	
+	<delete id="deleteMember" parameterType="string">
+		update member
+		set
+		mem_delete = 'Y'
+		where mem_id = #{mem_id}
+	</delete>
+</mapper>
+
+
+
+
+
+
+

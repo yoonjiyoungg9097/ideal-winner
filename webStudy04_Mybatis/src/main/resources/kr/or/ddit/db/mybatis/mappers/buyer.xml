@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.buyer.dao.IBuyerDAO">
+	<sql id="selectBuyerFrag">
+		SELECT
+		*
+		FROM buyer
+	</sql>
+
+	<select id="selectBuyer" parameterType="String"
+		resultType="buyerVO">
+		<include refid="selectBuyerFrag" />
+		WHERE BUYER_ID = #{id}
+	</select>
+	<select id="selectTotalRecord" resultType="long">
+		SELECT COUNT(*)
+		FROM
+		Buyer
+	</select>
+
+	<select id="selectBuyerList" resultType="buyerVO"
+		parameterType="pagingVO">
+		SELECT B.*
+		FROM (
+		SELECT ROWNUM RNUM, A.*
+		FROM (
+		<include refid="selectBuyerFrag" />
+		ORDER BY ROWID DESC ) A ) B
+		<![CDATA[
+		WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+		]]>
+	</select>
+
+	<delete id="deleteBuyer" parameterType="String">
+		UPDATE BUYER
+		SET
+		BUYER_DELETE = 'Y'
+		WHERE BUYER_ID = #{buyer_id}
+	</delete>
+
+	<update id="updateBuyer" parameterType="buyerVO">
+		update buyer
+		set 
+		BUYER_NAME = #{buyer_name},
+		BUYER_LGU = #{buyer_lgu},
+		BUYER_BANK = #{buyer_bank},
+		BUYER_BANKNO = #{buyer_bankno},
+		BUYER_BANKNAME = #{buyer_bankname},
+		BUYER_ZIP = #{buyer_zip},
+		BUYER_ADD1 = #{buyer_add1},
+		BUYER_ADD2 = #{buyer_add2},
+		BUYER_COMTEL = #{buyer_comtel},
+		BUYER_FAX = #{buyer_fax},
+		BUYER_MAIL = #{buyer_mail},
+		BUYER_CHARGER = #{buyer_charger}
+		WHERE BUYER_ID = #{buyer_id}
+	</update>
+
+
+	<insert id="insertBuyer" parameterType="buyerVO">
+		<selectKey keyProperty="buyer_id" resultType="String" order="BEFORE">
+			SELECT
+			#{buyer_lgu}||lpad((nvl(to_number(substr(max(buyer_id),5)),0)+1),2,'0')
+			FROM buyer
+			where buyer_lgu=#{buyer_lgu}
+		</selectKey>
+		insert into buyer(buyer_id, buyer_name, buyer_lgu,
+						  buyer_bank, buyer_bankno, buyer_bankname, 
+						  buyer_zip, buyer_add1, buyer_add2, buyer_comtel,
+						  buyer_fax, buyer_mail, buyer_charger)
+		values(#{buyer_id}, #{buyer_name}, #{buyer_lgu},
+				#{buyer_bank}, #{buyer_bankno},
+				#{buyer_bankname}, #{buyer_zip}, #{buyer_add1}, #{buyer_add2}, #{buyer_comtel},
+				#{buyer_fax}, #{buyer_mail}, #{buyer_charger})
+	</insert>
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.prod.dao.IProdDAO">
+	<sql id="searchFrag">
+		<where>
+			<if test="searchVO!=null">
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.prod_lgu)">
+					AND PROD_LGU = #{searchVO.prod_lgu}
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.prod_buyer)">
+					AND PROD_BUYER = #{searchVO.prod_buyer}
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.prod_name)">
+					AND PROD_NAME like '%'||#{searchVO.prod_name}||'%'
+				</if>
+			</if>
+		</where>
+	</sql>
+
+
+	<select id="selectTotalRecord" resultType="long" parameterType="pagingVO">
+		SELECT COUNT(*) FROM PROD
+<!-- 		<include refid="kr.or.ddit.prod.dao.IProdDAO.searchFrag" /> -->
+		<include refid="searchFrag" />
+	</select>
+	
+	<select id="selectProdList" resultType="prodVO" parameterType="pagingVO">
+		SELECT A.*
+		FROM(
+		SELECT ROWNUM RNUM, PROD_ID, PROD_NAME, PROD_PRICE,
+		PROD_OUTLINE, PROD_MILEAGE,
+		LPROD_NM, BUYER_NAME
+		FROM PROD INNER JOIN LPROD ON(PROD_LGU=LPROD_GU)
+		INNER JOIN BUYER ON(PROD_BUYER=BUYER_ID)
+		<include refid="searchFrag" />
+		) A
+		<![CDATA[	  
+	    WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+	    ]]>
+	</select>
+	
+	<resultMap type="buyerVO" id="buyerMap" autoMapping="true">
+<!-- 		<result property="buyer_name" column="BUYER_NAME" /> -->
+<!-- 		<result property="buyer_add1" column="BUYER_ADD1" /> -->
+<!-- 		<result property="buyer_charger" column="BUYER_CHARGER" /> -->
+<!-- 		<result property="buyer_comtel" column="BUYER_COMTEL" /> -->
+<!-- 		autoMapping을써서 생략가능 -->
+	</resultMap>
+	
+	
+	
+	<resultMap type="prodVO" id="prodMap" autoMapping="true">
+		<id property="prod_id" column="PROD_ID" />
+<!-- 		<result property="prod_name" column="PROD_NAME" /> -->
+<!-- 		<result property="prod_lgu" column="PROD_LGU" /> -->
+<!-- 		<result property="lprod_nm" column="LPROD_NM"/> -->
+<!-- 		<result property="prod_buyer" column="PROD_BUYER" /> -->
+<!-- 		<result property="prod_cost" column="PROD_COST" /> -->
+<!-- 		<result property="prod_price" column="PROD_PRICE" /> -->
+<!-- 		<result property="prod_sale" column="PROD_SALE" /> -->
+<!-- 		<result property="prod_outline" column="PROD_OUTLINE" /> -->
+<!-- 		<result property="prod_detail" column="PROD_DETAIL" /> -->
+<!-- 		<result property="prod_img" column="PROD_IMG" /> -->
+<!-- 		<result property="prod_totalstock" column="PROD_TOTALSTOCK" /> -->
+<!-- 		<result property="prod_insdate" column="PROD_INSDATE" /> -->
+<!-- 		<result property="prod_properstock" column="PROD_PROPERSTOCK" /> -->
+<!-- 		<result property="prod_size" column="PROD_SIZE" /> -->
+<!-- 		<result property="prod_color" column="PROD_COLOR" /> -->
+<!-- 		<result property="prod_delivery" column="PROD_DELIVERY" /> -->
+<!-- 		<result property="prod_unit" column="PROD_UNIT" /> -->
+<!-- 		<result property="prod_qtyin" column="PROD_QTYIN" /> -->
+<!-- 		<result property="prod_qtysale" column="PROD_QTYSALE" /> -->
+<!-- 		<result property="prod_mileage" column="PROD_MILEAGE" /> -->
+		
+<!-- 		<association property="buyer" resultMap="buyerMap" autoMapping="true"> -->
+		<association property="buyer" autoMapping="true" javaType="buyerVO">
+<!-- 			<result property="buyer_name" column="BUYER_NAME"/> -->
+		</association><!-- 1:1관계 -->
+		<collection property="customers" column="PROD_ID" select="selectCustomers"></collection><!-- 1:N관계 -->
+	</resultMap>
+	
+	
+	<select id="selectCustomers" resultType="memberVO">
+		SELECT MEM_ID, MEM_NAME, MEM_ADD1, MEM_ADD2, MEM_HP, MEM_MAIL
+		FROM CART INNER JOIN MEMBER ON(CART_MEMBER = MEM_ID)
+		WHERE CART_PROD = #{prod_id}
+	</select>
+	
+	<select id="selectProd" parameterType="String" resultMap="prodMap">
+		SELECT
+		PROD_ID, PROD_NAME, PROD_LGU,
+		PROD_BUYER, PROD_COST, PROD_PRICE,
+		PROD_SALE, PROD_OUTLINE, PROD_DETAIL,
+		PROD_IMG, PROD_TOTALSTOCK, PROD_INSDATE,
+		PROD_PROPERSTOCK, PROD_SIZE, PROD_COLOR,
+		PROD_DELIVERY, PROD_UNIT, PROD_QTYIN,
+		PROD_QTYSALE, PROD_MILEAGE
+		, LPROD_NM
+		, BUYER_NAME, BUYER_ADD1, BUYER_CHARGER, BUYER_COMTEL
+    
+		FROM PROD INNER JOIN LPROD ON(PROD_LGU = LPROD_GU)
+				  INNER JOIN BUYER ON(PROD_BUYER = BUYER_ID)
+		WHERE PROD_ID = #{prod_id}
+	</select>
+	
+	
+	<insert id="insertProd" parameterType="prodVO">
+		<selectKey resultType="string" keyProperty="prod_id" order="BEFORE"><!-- order="BEFORE"는 insert쿼리보다 먼저실행 -->
+<!-- 			PK 생성 쿼리 -->
+			SELECT #{prod_lgu}||LPAD(NVL(TO_NUMBER(SUBSTR(MAX(PROD_ID),5)),0)+1,6,'0')
+			FROM PROD
+			WHERE PROD_LGU = #{prod_lgu}
+		</selectKey>
+		INSERT INTO PROD (
+    		PROD_ID, PROD_NAME, PROD_LGU,
+   		 	PROD_BUYER, PROD_COST, PROD_PRICE,
+    		PROD_SALE, PROD_OUTLINE, PROD_DETAIL,
+    		PROD_IMG, PROD_TOTALSTOCK, PROD_INSDATE,
+    		PROD_PROPERSTOCK, PROD_SIZE, PROD_COLOR,
+    		PROD_DELIVERY, PROD_UNIT, PROD_QTYIN,
+    		PROD_QTYSALE, PROD_MILEAGE
+		) VALUES (
+			#{prod_id}, #{prod_name}, #{prod_lgu},
+    		#{prod_buyer}, #{prod_cost}, #{prod_price},
+    		#{prod_sale}, #{prod_outline}, #{prod_detail},
+    		#{prod_img,jdbcType=VARCHAR}, #{prod_totalstock}, TO_DATE(#{prod_insdate,jdbcType=DATE}, 'YYYY-MM-DD'),
+    		#{prod_properstock}, #{prod_size}, #{prod_color},
+    		#{prod_delivery}, #{prod_unit}, #{prod_qtyin},
+    		#{prod_qtysale}, #{prod_mileage}
+		)
+	</insert>
+	
+	
+	<update id="updateProd" parameterType="prodVO">
+		update prod
+		set
+		prod_name=#{prod_name}                                   ,
+		prod_cost=#{prod_cost}                                   ,
+		prod_price=#{prod_price}                                 ,
+		prod_sale=#{prod_sale}                                   ,
+		prod_outline=#{prod_outline}                             ,
+		prod_detail=#{prod_detail}                               ,
+		
+		
+		prod_totalstock=#{prod_totalstock}                       ,
+		prod_properstock=#{prod_properstock}                     ,
+		prod_size=#{prod_size}                                   ,
+		prod_color=#{prod_color}                                 ,
+		prod_delivery=#{prod_delivery}                           ,
+		prod_unit=#{prod_unit}                                   ,
+		prod_qtyin=#{prod_qtyin}                                 ,
+		prod_qtysale=#{prod_qtysale}                             ,
+		prod_mileage=#{prod_mileage}                             
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(prod_img)">
+		,	prod_img=#{prod_img}                           
+		</if>          
+		where prod_id=#{prod_id}                                      
+	</update>	
+</mapper>
+
+
+
+
+
+
+
+
+

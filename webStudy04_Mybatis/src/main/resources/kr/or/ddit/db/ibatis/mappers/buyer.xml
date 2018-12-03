@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="Buyer">
+	<sql id="selectBuyerFrag">
+		SELECT
+		*
+		FROM buyer
+	</sql>
+
+	<select id="selectBuyer" parameterClass="String"
+		resultClass="buyerVO">
+		<include refid="Buyer.selectBuyerFrag" />
+		WHERE BUYER_ID = #id#
+	</select>
+	<select id="selectTotalRecord" resultClass="long">
+		SELECT COUNT(*)
+		FROM
+		Buyer
+	</select>
+
+	<select id="selectAllBuyer" resultClass="buyerVO"
+		parameterClass="pagingVO">
+		SELECT B.*
+		FROM (
+		SELECT ROWNUM RNUM, A.*
+		FROM (
+		<include refid="Buyer.selectBuyerFrag" />
+		ORDER BY ROWID DESC ) A ) B
+		<![CDATA[
+		WHERE RNUM >= #startRow# AND RNUM <= #endRow#
+		]]>
+	</select>
+
+	<delete id="deleteBuyer" parameterClass="String">
+		UPDATE BUYER
+		SET
+		BUYER_DELETE = 'Y'
+		WHERE BUYER_ID = #buyer_id#
+	</delete>
+
+	<update id="updateBuyer" parameterClass="buyerVO">
+		update buyer
+		set BUYER_ID
+		= #buyer_id#,
+		BUYER_NAME = #buyer_name#,
+		BUYER_LGU = #buyer_lgu#,
+		BUYER_BANK = #buyer_bank#,
+		BUYER_BANKNO = #buyer_bankno#,
+		BUYER_BANKNAME = #buyer_bankname#,
+		BUYER_ZIP = #buyer_zip#,
+		BUYER_ADD1 = #buyer_add1#,
+		BUYER_ADD2 = #buyer_add2#,
+		BUYER_COMTEL = #buyer_comtel#,
+		BUYER_FAX = #buyer_fax#,
+		BUYER_MAIL = #buyer_mail#,
+		BUYER_CHARGER = #buyer_charger#,
+		BUYER_DELETE = #buyer_delete#
+		WHERE BUYER_ID = #buyer_id#
+	</update>
+
+
+	<insert id="insertBuyer" parameterClass="buyerVO">
+		<selectKey keyProperty="buyer_id" resultClass="String" type="pre">
+			SELECT
+			#buyer_lgu#||lpad((nvl(to_number(substr(max(buyer_id),5)),0)+1),2,'0')
+			FROM buyer
+			where buyer_lgu=#buyer_lgu#
+		</selectKey>
+		insert into buyer(buyer_id, buyer_name, buyer_lgu,
+						  buyer_bank, buyer_bankno, buyer_bankname, 
+						  buyer_zip, buyer_add1, buyer_add2, buyer_comtel,
+						  buyer_fax, buyer_mail, buyer_charger)
+		values(#buyer_id#, #buyer_name#, #buyer_lgu#,
+				#buyer_bank#, #buyer_bankno#,
+				#buyer_bankname#, #buyer_zip#, #buyer_add1#, #buyer_add2#, #buyer_comtel#,
+				#buyer_fax#, #buyer_mail#, #buyer_charger#)
+	</insert>
+
+</sqlMap>
