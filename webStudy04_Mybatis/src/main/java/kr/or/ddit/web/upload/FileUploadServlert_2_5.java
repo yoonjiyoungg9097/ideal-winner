@@ -28,8 +28,10 @@ public class FileUploadServlert_2_5 extends HttpServlet {
 //		InputStream in = req.getInputStream();
 		// 1. commons-fileupload 라이브러리 추가
 		// 2. 파일 업로드 핸들러 객체 생성
+		//파일 저장을 담당할 객체 준비
 		DiskFileItemFactory fileItemFactory = new DiskFileItemFactory(10240, new File("d:/temp"));//10240->10kb
 		
+		//멀티 파트 데이터로부터 각 파트의 추출을 담당할 객체 준비
 		ServletFileUpload handler = new ServletFileUpload(fileItemFactory);
 		
 //		ServletFileUpload handler = new ServletFileUpload();//임시 저장 위치를 설정하지 않고 변경하고 싶을때??
@@ -41,7 +43,7 @@ public class FileUploadServlert_2_5 extends HttpServlet {
 			if(fileItems!=null) {
 				for(FileItem item : fileItems) {
 					String partname = item.getFieldName();//파라미터명
-					if(item.isFormField()) {//파일데이터인지
+					if(item.isFormField()) {//파일데이터인지 // 일반 데이터
 						// 5. 일반 문자열 기반의 FileItem 에 대한 처리와
 						String parameterValue = item.getString(req.getCharacterEncoding());
 						String[] alreadyValues = parameterMap.get(partname);
@@ -54,7 +56,7 @@ public class FileUploadServlert_2_5 extends HttpServlet {
 						}
 						values[values.length-1]=parameterValue;
 						parameterMap.put(partname, values);
-					}else {
+					}else {// 파일 데이터
 						//파일을 선택하지 않으면 비어있는 part를 skip
 						if(StringUtils.isBlank(item.getName())) {//파일이 선택되지 않았는데  만들어질때??????
 							continue;

@@ -62,7 +62,7 @@ public class FileUploadServlet_3_0 extends HttpServlet {
 //		File saveFile = new File(saveFolder, originalFilename);//원본파일명을 대신해서 확장자를 뺀 파일명
 		//Middle tier 에 파일의 body를 저장
 		File saveFile = new File(saveFolder, savename);
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[1024];//1KB = 1024buytes
 		int pointer = -1;
 		try(
 			InputStream in = uploadFile.getInputStream();
@@ -78,6 +78,7 @@ public class FileUploadServlet_3_0 extends HttpServlet {
 		
 		
 		//Database 에 파일의 메타데이터를 저장 (메타데이터 : 누가 업로드했는지 원래마임은 뭔지 이런거?)
+		// getPath()는 src/test 그대로 반환한 반면, getAbsolutePath()와 getCanonicalPath()는 현재 프로그램을 실행한 경로(D:\workspace\Test)를 포함하고 있다.
 		long filesize = uploadFile.getSize();
 		System.out.printf("데이터베이스에 저장할 메타데이터: 업로더(%s), 원본명:(%s), \n"+
 				"파일크기(%d), 파일종류(%s), 저장위치(%s), \n 저장URL(%s)",
