@@ -21,7 +21,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
 
 public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
+	//문자열이 아닌 파라미터맵을 담아주기위한 맵
 	private Map<String, String[]> parameterMap;
+	//파트로나눈것중에 input태그의 타입이 file일 경우 요기에 담아줌
 	private Map<String, List<FileItem>> fileItemMap;
 
 	public FileUploadRequestWrapper(HttpServletRequest request) throws IOException {
@@ -31,10 +33,11 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 	public FileUploadRequestWrapper(HttpServletRequest request, int sizeThreshold, File repository) throws IOException {
 		super(request);
 		
-		parameterMap = new LinkedHashMap<>();
-		parameterMap.putAll(request.getParameterMap());
+		parameterMap = new LinkedHashMap<>();//생성
+		parameterMap.putAll(request.getParameterMap());//input태그의 모든 파라미터를 가지고옴
 		fileItemMap = new LinkedHashMap<>();
-		parseRequest(request, sizeThreshold, repository);
+		parseRequest(request, sizeThreshold, repository);//parseRequest 메소드 호출
+
 	}
 
 	private void parseRequest(HttpServletRequest request, int sizeThreshold, File repository) throws IOException {
@@ -54,24 +57,29 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 
 //				ServletFileUpload handler = new ServletFileUpload();//임시 저장 위치를 설정하지 않고 변경하고 싶을때??
 		// 3. 핸들러 객체를 이용해 현재 요청 파싱 (Part -> FileItem)
-		request.setCharacterEncoding("UTF-8");
+		request.setCharacterEncoding("UTF-8");//한글이 포함된 파일이 올수도 있으니까 인코딩
+
 		try {
+			//req즉 요청받은 파라미터를 Fileitem으로 파싱해줌.
 			List<FileItem> fileItems = handler.parseRequest(request);
 			// 4. FileItem 들을 대상으로 반복 실행
 			if (fileItems != null) {
 				for (FileItem item : fileItems) {
 					String partname = item.getFieldName();// 파라미터명
+					//파트에 담긴 input태그의 타입이 file이면 펄스, 아니면 트루
 					if (item.isFormField()) {// 파일데이터인지
 						// 5. 일반 문자열 기반의 FileItem 에 대한 처리와
 						String parameterValue = item.getString(request.getCharacterEncoding());
 						String[] alreadyValues = parameterMap.get(partname);
 						String[] values = null;
 						if (alreadyValues == null) {// 기존의 같은이름을 쓰는 데이터가 없다
+							//즉 values의 배열 생성 크기는 1
 							values = new String[1]; // 1개짜리 배열
 						} else {// 기존의 같은이름을 쓰는 데이터가 있다
 							values = new String[alreadyValues.length + 1];
 							System.arraycopy(alreadyValues, 0, values, 0, alreadyValues.length);
 						}
+						//1회차일경우 values의 0번째 방에 utf-8담아줌 
 						values[values.length - 1] = parameterValue;
 						parameterMap.put(partname, values);
 					} else {
@@ -101,6 +109,7 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 
 	@Override
 	public Map<String, String[]> getParameterMap() {
+		//컨트롤러에서 리퀘스트.getParamterMap하면 이곳의 맵이 호출되서 값을주는거임
 		return parameterMap;
 	}
 	

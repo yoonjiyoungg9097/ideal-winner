@@ -45,7 +45,7 @@ public class ProdInsertController implements ICommandHandler {
 			
 			ProdVO prod = new ProdVO();
 			req.setAttribute("prod", prod);
-			try {
+			try {//wrapper-req
 				BeanUtils.populate(prod, req.getParameterMap());
 			} catch (IllegalAccessException | InvocationTargetException e) {
 				throw new RuntimeException(e);
