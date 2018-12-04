@@ -26,16 +26,9 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
 	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 	crossorigin="anonymous"></script>
+
 <script type="text/javascript">
 	$(function() {
-<%String message = (String) request.getAttribute("message");
-			if (StringUtils.isBlank(message)) {
-				message = (String) session.getAttribute("message");
-				session.removeAttribute("message");
-			}
-			if (StringUtils.isNotBlank(message)) {%>
-	alert("${message}");
-<%}%>
 	// 	$("[type='date']").datePicker({
 		// 			dateFormat : "yy-mm-dd"
 		// 		});

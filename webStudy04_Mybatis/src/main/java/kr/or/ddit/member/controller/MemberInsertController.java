@@ -15,10 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
@@ -69,7 +71,6 @@ public class MemberInsertController implements ICommandHandler {
 			throw new CommonException(e);
 		}
 		
-		
 //		<jsp:useBean id="member" class="kr.or.ddit.vo.MemberVO" scope="request" />
 //		<jsp:setProperty property="mem_id" name="member" param="mem_id"/> 
 		
@@ -83,6 +84,14 @@ public class MemberInsertController implements ICommandHandler {
 
 		// 	if(errors.size()>0){
 		if (valid) {
+			if(req instanceof FileUploadRequestWrapper) {//현재 요청 객체가 Wrapper인지 확인
+				FileItem fileItem = ((FileUploadRequestWrapper) req).getFileItem("mem_image");
+				if(fileItem!=null) {
+					member.setMem_img(fileItem.get());
+				}
+			}
+			
+			
 			IMemberService service = new MemberServiceImpl();
 			ServiceResult result = service.registMember(member);
 			switch (result) {

@@ -20,7 +20,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script type="text/javascript">
-<%-- 	function <%=pagingVO.getFuncName()%>(page){ --%>
 		function ${pagingVO.funcName}(page){
 		document.searchForm.page.value=page;
 		document.searchForm.submit();
@@ -50,7 +49,7 @@
 			<c:forEach items="${memberList }" var="member">
 				<tr>
                 <td>${member.mem_id }</td>
-                <td><a href="${pageContext.request.contextPath}/member/memberView.do?who=${member.mem_id}">${member.mem_id }</td>
+                <td><a href="${pageContext.request.contextPath}/member/memberView.do?who=${member.mem_id}">${member.mem_id }</a></td>
                 <td>${member.address }</td>
                 <td>${member.mem_hp }</td>
                 <td>${member.mem_mail }</td>
@@ -63,21 +62,6 @@
 				<td colspan="6">회원 목록 없으요</td>
 			</tr>
 		</c:if>
-		    <%
-//           String pattern = "<tr class='info'><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%d</td></td>";
-//           if(memberList.size()!=0){
-//              for(MemberVO member:memberList){
-//                 pageContext.setAttribute("member", member);
-                %>
-<!--                 <tr> -->
-<%--                 <td>${member.mem_id }</td> --%>
-<%--                 <td><a href="${pageContext.request.contextPath}/member/memberView.do?who=${member.mem_id}">${member.mem_id }</td> --%>
-<%--                 <td>${member.address }</td> --%>
-<%--                 <td>${member.mem_hp }</td> --%>
-<%--                 <td>${member.mem_mail }</td> --%>
-<%--                 <td>${member.mem_mileage }</td> --%>
-<!--                 </tr> -->
-<!--                 out.print(String.format(pattern, member.getMem_id(),"<a href='"+request.getContextPath()+"/member/memberView.do?who="+member.getMem_id()+"'>"+ member.getMem_name()+"</a>",member.getAddress(),member.getMem_hp(),member.getMem_mail(),member.getMem_mileage())); -->
 
 	</tbody>
 	<tfoot>

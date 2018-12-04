@@ -19,14 +19,6 @@
 		<c:if test="${not empty message}">
 			alert("${message}");
 		</c:if>
-<%-- 		<% --%>
-// 			String message = (String) request.getAttribute("message");
-// 			if(StringUtils.isNotBlank(message)){
-<%-- 				%> --%>
-// 					alert("${request.message}");
-<%-- 				<% --%>
-// 			}
-<%-- 		%> --%>
 		
 		$("[type='date']").datePicker({
 			dateFormat: "yy-mm-dd"
@@ -56,6 +48,15 @@
 				<td><input type="text" name="mem_name"
 					value="${member.mem_name }" /><span class="error">${errors["mem_name"]}</span></td>
 			</tr>
+			
+			<tr>
+				<th>회원이미지</th>
+				<td>
+					<input type="file" name="mem_image" accept="image/*"/>
+				</td>
+			</tr>
+			
+			
 			<tr>
 				<th>주민번호1</th>
 				<td><input type="text" name="mem_regno1"

@@ -4,14 +4,17 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Alias("memberVO")
 @Data
+@ToString(exclude= {"mem_img"})
 @NoArgsConstructor
 @EqualsAndHashCode(of= {"mem_id", "mem_regno1", "mem_regno2"})
 public class MemberVO implements Serializable{
@@ -42,6 +45,14 @@ public class MemberVO implements Serializable{
 	private Long mem_mileage;
 	private String mem_delete;
 	private String mem_auth;
+	private byte[] mem_img;
+	public String getMem_imgToBase64(){
+		if(mem_img==null) {
+			return null;
+		}else {
+			return Base64.encodeBase64String(mem_img);
+		}
+	}
 	//구매 상품 목록
 	private List<ProdVO> prodList;
 	

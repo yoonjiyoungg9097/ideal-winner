@@ -42,10 +42,13 @@ public class BuyerListController implements ICommandHandler {
 		int currentPage = 1;
 		IBuyerService service = new BuyerServiceImpl();
 		long totalPage = service.selectTotalRecord();
-		PagingInfoVO pagingVO = new PagingInfoVO();
+		PagingInfoVO<BuyerVO> pagingVO = new PagingInfoVO();
 		
 		FrontController fc = new FrontController();
 		String page = req.getParameter("page");
+		String searchWord = req.getParameter("searchWord");
+		pagingVO.setSearchWord(searchWord);
+		
 		if(StringUtils.isNumeric(page)) {//숫자일때만 true
 			currentPage = Integer.parseInt(page);
 		}
@@ -56,7 +59,7 @@ public class BuyerListController implements ICommandHandler {
 		
 		String view = "buyer/buyerList";
 		req.setAttribute("pagingVO", pagingVO);
-		req.setAttribute("buyerList", buyerList);
+		pagingVO.setDataList(buyerList);
 		return view;
 	}
 

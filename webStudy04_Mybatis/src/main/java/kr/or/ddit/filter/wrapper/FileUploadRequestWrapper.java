@@ -69,7 +69,12 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 					//파트에 담긴 input태그의 타입이 file이면 펄스, 아니면 트루
 					if (item.isFormField()) {// 파일데이터인지
 						// 5. 일반 문자열 기반의 FileItem 에 대한 처리와
-						String parameterValue = item.getString(request.getCharacterEncoding());
+						String parameterValue = null;
+						if(request.getCharacterEncoding()!=null) {
+							parameterValue = item.getString(request.getCharacterEncoding());
+						}else {
+							parameterValue = item.getString();
+						}
 						String[] alreadyValues = parameterMap.get(partname);
 						String[] values = null;
 						if (alreadyValues == null) {// 기존의 같은이름을 쓰는 데이터가 없다

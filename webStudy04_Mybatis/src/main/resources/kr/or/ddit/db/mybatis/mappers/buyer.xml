@@ -25,10 +25,14 @@
 		SELECT ROWNUM RNUM, A.*
 		FROM (
 		<include refid="selectBuyerFrag" />
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+			where	buyer_name like '%'||#{searchWord}||'%'
+		</if>
 		ORDER BY ROWID DESC ) A ) B
 		<![CDATA[
 		WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
 		]]>
+		
 	</select>
 
 	<delete id="deleteBuyer" parameterType="String">

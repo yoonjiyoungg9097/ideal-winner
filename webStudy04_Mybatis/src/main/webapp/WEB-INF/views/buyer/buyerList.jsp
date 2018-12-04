@@ -19,6 +19,12 @@
 	src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script type="text/javascript">
+	function ${pagingVO.funcName}(page){
+		document.searchForm.page.value=page;
+		document.searchForm.submit();
+	}
+</script>
 </head>
 <body>
 <h4>buyer 목록</h4>
@@ -37,6 +43,7 @@
 	</thead>
 	
 	<tbody>
+		<c:set var="buyerList" value="${pagingVO.dataList }"></c:set>
 		<c:if test="${not empty buyerList }">
 		<c:forEach items="${buyerList }" var="buyer">
 		<tr class='info'>
@@ -63,5 +70,10 @@
           </tr>
 	</tfoot>
 </table>
+<form name="searchForm">
+	<input type="hidden" name="page">
+	<input type="text" name="searchWord">
+	<input type="submit" value="검색">
+</form>
 </body>
 </html>

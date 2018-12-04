@@ -44,7 +44,6 @@ public class FrontController extends HttpServlet {
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
 //		1. 요청 매핑 설정 - web.xml에 servlet추가해주기
 //		2. 요청 분석(주소,//여기서 부터 뒤에 있는 객체가 실행할 수 있다 파라미터, 메소드, 헤더...)
 		String uri = req.getRequestURI(); //주소 분석

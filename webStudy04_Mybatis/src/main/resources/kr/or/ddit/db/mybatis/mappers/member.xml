@@ -62,36 +62,12 @@
 
 	<resultMap type="memberVO" id="memberMap" autoMapping="true">
 		<id property="mem_id" column="MEM_ID" />
-		<result property="mem_pass" column="MEM_PASS" />
-		<result property="mem_name" column="MEM_NAME" />
-		<result property="mem_regno1" column="MEM_REGNO1" />
-		<result property="mem_regno2" column="MEM_REGNO2" />
-		<result property="mem_bir" column="MEM_BIR" />
-		<result property="mem_zip" column="MEM_ZIP" />
-		<result property="mem_add1" column="MEM_ADD1" />
-		<result property="mem_add2" column="MEM_ADD2" />
-		<result property="mem_hometel" column="MEM_HOMETEL" />
-		<result property="mem_comtel" column="MEM_COMTEL" />
-		<result property="mem_hp" column="MEM_HP" />
-		<result property="mem_mail" column="MEM_MAIL" />
-		<result property="mem_job" column="MEM_JOB" />
-		<result property="mem_like" column="MEM_LIKE" />
-		<result property="mem_memorial" column="MEM_MEMORIAL" />
-		<result property="mem_mileage" column="MEM_MILEAGE" />
-		<result property="mem_delete" column="MEM_DELETE" />
-		<result property="mem_auth" column="MEM_AUTH" />
 
-		<collection property="prodList" resultMap="prodMap"></collection>
-		<!-- <result property="prodList" /> -->
+		<collection property="prodList" autoMapping="true" javaType="java.util.List" ofType="prodVO" 
+		/>
 	</resultMap>
 
-	<resultMap type="prodVO" id="prodMap">
-		<result property="prod_id" column="PROD_ID" />
-		<result property="prod_name" column="PROD_NAME" />
-		<result property="prod_cost" column="PROD_COST" />
-		<result property="prod_price" column="PROD_PRICE" />
-		<result property="prod_outline" column="PROD_OUTLINE" />
-	</resultMap>
+	
 	<select id="selectMember" parameterType="string"
 		resultMap="memberMap">
 		SELECT
@@ -104,7 +80,7 @@
 		MEM_MEMORIAL,
 		TO_CHAR(MEM_MEMORIALDAY,'YYYY-MM-DD')MEM_MEMORIALDAY,
 		MEM_MILEAGE,
-		MEM_DELETE, MEM_AUTH
+		MEM_DELETE, MEM_AUTH, MEM_IMG
 		, PROD_ID, PROD_NAME, PROD_COST,
 		PROD_PRICE, PROD_OUTLINE
 		FROM MEMBER LEFT OUTER JOIN CART ON (MEM_ID =
@@ -124,7 +100,7 @@
 		MEM_HOMETEL, MEM_COMTEL, MEM_HP,
 		MEM_MAIL, MEM_JOB,
 		MEM_LIKE, MEM_MEMORIAL,
-		MEM_MEMORIALDAY, MEM_MILEAGE, MEM_AUTH
+		MEM_MEMORIALDAY, MEM_MILEAGE, MEM_AUTH, MEM_IMG
 		) VALUES
 		(
 		#{mem_id}, #{mem_pass}, #{mem_name},
@@ -133,7 +109,7 @@
 		#{mem_zip},#{mem_add1},#{mem_add2},
 		#{mem_hometel},#{mem_comtel},#{mem_hp},
 		#{mem_mail},#{mem_job},#{mem_like},#{mem_memorial},
-		TO_DATE(#{mem_memorialday}, 'YYYY-MM-DD'), 1000, 'ROLE_USER'
+		TO_DATE(#{mem_memorialday}, 'YYYY-MM-DD'), 1000, 'ROLE_USER', #{mem_img, jdbcType=BLOB}
 		)
 	</insert>
 
@@ -153,6 +129,9 @@
 		mem_like=#{mem_like},
 		mem_memorial=#{mem_memorial},
 		mem_memorialday=TO_DATE(#{mem_memorialday}, 'YYYY-MM-DD')
+		<if test="mem_img!=null">
+		,	mem_img=#{mem_img}
+		</if>
 		where mem_id = #{mem_id}
 	</update>
 	

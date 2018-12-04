@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
@@ -56,6 +58,17 @@ public class MemberUpdateController implements ICommandHandler {
 		boolean valid = validate(member, errors);
 		
 		if(valid) {
+			
+			if(req instanceof FileUploadRequestWrapper) {
+				System.out.println("아니 1");
+				FileItem fileItem = ((FileUploadRequestWrapper) req).getFileItem("mem_image");
+				if(fileItem!=null) {
+					System.out.println("아니 똥");
+					member.setMem_img(fileItem.get());
+				}else {
+					
+				}
+			}
 			//Businness Logic Layer와의 의존관계 형성
 			IMemberService service = new MemberServiceImpl();
 			//service의 회원수정 메서드를 불러와 값을 ServiceResult타입에 담아준다
