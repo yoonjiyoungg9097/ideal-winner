@@ -46,8 +46,10 @@ public class BuyerListController implements ICommandHandler {
 		
 		FrontController fc = new FrontController();
 		String page = req.getParameter("page");
-		String searchWord = req.getParameter("searchWord");
+		String searchWord = req.getParameter("searchWord");//PagingVO에 있는 컬럼명과 같게 해줘야 한다
 		pagingVO.setSearchWord(searchWord);
+		String searchType = req.getParameter("searchType");
+		pagingVO.setSearchType(searchType);
 		
 		if(StringUtils.isNumeric(page)) {//숫자일때만 true
 			currentPage = Integer.parseInt(page);

@@ -72,6 +72,11 @@
 </table>
 <form name="searchForm">
 	<input type="hidden" name="page">
+	<select name="searchType">
+		<option value="all">전체</option>
+		<option value="name">판매처명</option>
+		<option value="address">주소</option>
+	</select>
 	<input type="text" name="searchWord">
 	<input type="submit" value="검색">
 </form>

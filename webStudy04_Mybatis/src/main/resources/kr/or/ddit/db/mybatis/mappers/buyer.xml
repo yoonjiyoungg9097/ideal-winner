@@ -25,9 +25,21 @@
 		SELECT ROWNUM RNUM, A.*
 		FROM (
 		<include refid="selectBuyerFrag" />
+		<where>
 		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
-			where	buyer_name like '%'||#{searchWord}||'%'
+			<if test="searchType.equals('all')">
+			buyer_name like '%'||#{searchWord}||'%'
+			or
+			buyer_add1 like '%'||#{searchWord}||'%'
+			</if>
+			<if test="searchType.equals('name')">
+				buyer_name like '%'||#{searchWord}||'%'
+			</if>
+			<if test="searchType.equals('address')">
+				buyer_add1 like '%'||#{searchWord}||'%'
+			</if>
 		</if>
+		</where>
 		ORDER BY ROWID DESC ) A ) B
 		<![CDATA[
 		WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
