@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript">
-	function paging(page){
+	/* function paging(page){
 		$.ajax({
 			url:"${pageContext.request.contextPath}/reply/replyList.do",
 			data:{
@@ -35,7 +35,7 @@
 		pagingArea = $("#pagingArea");
 		listBody = $("#listBody");
 		paging(1);
-	});
+	}); */
 </script>
 </head>
 <body>
@@ -91,6 +91,16 @@
 				<th>댓글 작성일</th>
 			</tr>
 		</thead>
+		<tbody>
+			<c:forEach items="${board.replyList }" var="replyList">
+				<tr>
+					<td>${replyList.rep_writer }</td>
+					<td>${replyList.rep_ip }</td>
+					<td>${replyList.rep_content }</td>
+					<td>${replyList.rep_date }</td>
+				</tr>
+			</c:forEach>
+		</tbody>
 	</table>
 </body>
 </html>
