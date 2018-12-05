@@ -29,7 +29,7 @@ public class BuyerDAOImpl implements IBuyerDAO{
 		try(
 				SqlSession session = sqlSessionFactory.openSession();
 		){
-				IBuyerDAO mapper = session.getMapper(IBuyerDAO.class);
+				IBuyerDAO mapper = session.getMapper(IBuyerDAO.class);//xml과 dao를 연결해주는 부분
 				return mapper.selectTotalRecord();
 		}
 	}

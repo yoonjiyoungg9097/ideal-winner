@@ -19,7 +19,7 @@ import kr.or.ddit.vo.PagingInfoVO;
  * Copyright (c) 2018 by DDIT All right reserved
  * </pre>
  */
-public interface IBoardDao {
+public interface IBoardDAO {
 	/**
 	 * 게시글 작성
 	 * @param board

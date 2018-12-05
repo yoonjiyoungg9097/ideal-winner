@@ -27,7 +27,7 @@ public class PagingInfoVO<T> {
 	private long totalRecord;
 	private int screenSize = 10;
 	private int blockSize = 5;  
-	private int currentPage;
+	private long currentPage;
 	private long totalPage;
 	private long startPage;
 	private long endPage;
@@ -43,7 +43,7 @@ public class PagingInfoVO<T> {
 		this.totalRecord = totalRecord;
 		totalPage = totalRecord%screenSize==0?totalRecord/screenSize:totalRecord/screenSize+1;
 	}
-	public void setCurrentPage(int currentPage) {
+	public void setCurrentPage(long currentPage) {
 		this.currentPage = currentPage;
 		endRow = currentPage * screenSize;
 		startRow = endRow - (screenSize-1);

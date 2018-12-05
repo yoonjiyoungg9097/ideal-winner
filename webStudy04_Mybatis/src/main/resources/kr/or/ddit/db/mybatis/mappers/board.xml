@@ -1,5 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.or.ddit.board.dao.IBoardDao">
+<mapper namespace="kr.or.ddit.board.dao.IBoardDAO">
+	<sql id="search">
+		<where>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+				<if test="searchType.equals('writer')">
+					bo_writer like '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('title')">
+					bo_title like '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('content')">
+					bo_content like '%'||#{searchWord}||'%'
+				</if>
+				<if test="searchType.equals('all')">
+					bo_writer like '%'||#{searchWord}||'%'
+					or
+					bo_title like '%'||#{searchWord}||'%'
+					or
+					bo_content like '%'||#{searchWord}||'%'
+				</if>
+			</if>
+		</where>
+	</sql>
 
+	<select id="selectTotalRecord" resultType="long"
+		parameterType="pagingVO">
+		select count(*) from board
+		<include refid="search"/>
+	</select>
+
+	<select id="selectBoardList" parameterType="pagingVO"
+		resultType="boardVO">
+		select b.*
+		from(select rownum rnum, a.*
+		from (select bo_no, bo_title, bo_writer, bo_date, bo_hit, bo_rcmd
+		from board
+		<include refid="search"/>
+		order by bo_no desc) a) b
+		where b.rnum between #{startRow} and #{endRow}
+	</select>
+	
+	
+	<resultMap type="boardVO" id="replyMap" autoMapping="true">
+		<id property="bo_no" column="BO_NO"/>
+		<collection property="replyList" autoMapping="true" javaType="java.util.List" ofType="replyVO"/>
+<!-- 		javaType은 실제 타입 ofType은 제너릭 타입 boardVO에 있는 replyList를 가져오기 위해 resultMap을 만들어준다 -->
+<!-- 			collection의 property는 boardVO에 있는 replyList라는 프로퍼티명과 같게한다 -->
+	</resultMap>
+	<select id="selectBoard" parameterType="long" resultMap="replyMap">
+		select board.bo_no, bo_writer, bo_pass, bo_ip, bo_mail, bo_title,
+			   bo_content, bo_date, bo_hit, bo_rcmd,
+			   rep_writer, rep_ip, rep_content, rep_date
+		from board left outer join reply on (board.bo_no=reply.bo_no)
+		where board.bo_no = #{board.bo_no}
+	</select>
+	
+	
 </mapper>

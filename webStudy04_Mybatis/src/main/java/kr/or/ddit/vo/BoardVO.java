@@ -24,4 +24,5 @@ public class BoardVO implements Serializable {
 	private Long bo_rcmd;
 	private List<PdsVO> pdsList;
 	private List<ReplyVO> replyList;
+	private Long rnum;
 }

@@ -2,6 +2,7 @@ package kr.or.ddit.board.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import kr.or.ddit.mybatis.CustomSqlSessionFactoryBuilder;
@@ -20,8 +21,12 @@ public class ReplyDAOImpl implements IReplyDAO {
 
 	@Override
 	public long selectTotalRecord(PagingInfoVO<ReplyVO> pagingVO) {
-		// TODO Auto-generated method stub
-		return 0;
+		try(
+				SqlSession session = sqlSessionFactory.openSession();
+			){
+				IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+				return mapper.selectTotalRecord(pagingVO);
+			}
 	}
 
 	@Override

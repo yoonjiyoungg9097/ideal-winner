@@ -14,6 +14,7 @@
 <head>
 <meta charset="UTF-8">
 <title>buyer/buyerList.jsp</title>
+
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <script type="text/javascript" 
 	src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
@@ -77,7 +78,7 @@
 		<option value="name">판매처명</option>
 		<option value="address">주소</option>
 	</select>
-	<input type="text" name="searchWord">
+	<input type="text" name="searchWord" value="${pagingVO.searchWord }" >
 	<input type="submit" value="검색">
 </form>
 </body>

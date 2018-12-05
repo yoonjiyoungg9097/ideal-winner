@@ -23,7 +23,7 @@
 	function ${pagingVO.funcName}(page){
 		$("[name='searchForm']").find("[name='page']").val(page);
 // 		document.searchForm.page.value=page;
-		$("[name='searchForm']").submit(); //이벤트 발샐??
+		$("[name='searchForm']").submit(); //이벤트 발생??
 // 		document.searchForm.submit(); 함수 하나만 호출하고 끝
 	}
 	

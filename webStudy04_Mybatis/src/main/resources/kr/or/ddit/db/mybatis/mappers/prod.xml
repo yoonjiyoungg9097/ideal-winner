@@ -51,26 +51,6 @@
 	
 	<resultMap type="prodVO" id="prodMap" autoMapping="true">
 		<id property="prod_id" column="PROD_ID" />
-<!-- 		<result property="prod_name" column="PROD_NAME" /> -->
-<!-- 		<result property="prod_lgu" column="PROD_LGU" /> -->
-<!-- 		<result property="lprod_nm" column="LPROD_NM"/> -->
-<!-- 		<result property="prod_buyer" column="PROD_BUYER" /> -->
-<!-- 		<result property="prod_cost" column="PROD_COST" /> -->
-<!-- 		<result property="prod_price" column="PROD_PRICE" /> -->
-<!-- 		<result property="prod_sale" column="PROD_SALE" /> -->
-<!-- 		<result property="prod_outline" column="PROD_OUTLINE" /> -->
-<!-- 		<result property="prod_detail" column="PROD_DETAIL" /> -->
-<!-- 		<result property="prod_img" column="PROD_IMG" /> -->
-<!-- 		<result property="prod_totalstock" column="PROD_TOTALSTOCK" /> -->
-<!-- 		<result property="prod_insdate" column="PROD_INSDATE" /> -->
-<!-- 		<result property="prod_properstock" column="PROD_PROPERSTOCK" /> -->
-<!-- 		<result property="prod_size" column="PROD_SIZE" /> -->
-<!-- 		<result property="prod_color" column="PROD_COLOR" /> -->
-<!-- 		<result property="prod_delivery" column="PROD_DELIVERY" /> -->
-<!-- 		<result property="prod_unit" column="PROD_UNIT" /> -->
-<!-- 		<result property="prod_qtyin" column="PROD_QTYIN" /> -->
-<!-- 		<result property="prod_qtysale" column="PROD_QTYSALE" /> -->
-<!-- 		<result property="prod_mileage" column="PROD_MILEAGE" /> -->
 		
 <!-- 		<association property="buyer" resultMap="buyerMap" autoMapping="true"> -->
 		<association property="buyer" autoMapping="true" javaType="buyerVO">
