@@ -1,6 +1,7 @@
 package kr.or.ddit.board.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -47,11 +48,10 @@ public class ReplyListController implements ICommandHandler {
 		resp.setContentType("application/json;charset=UTF-8");
 		ObjectMapper mapper = new ObjectMapper();
 		try(
-			p	
+			PrintWriter writer = resp.getWriter();
 		){
-			
+			mapper.writeValue(writer, pagingVO);
 		}
-		
 		
 		
 		return null;

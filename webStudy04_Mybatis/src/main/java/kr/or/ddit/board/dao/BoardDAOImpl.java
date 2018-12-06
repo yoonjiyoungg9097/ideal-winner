@@ -51,6 +51,13 @@ public class BoardDAOImpl implements IBoardDAO {
 
 	@Override
 	public void incrementHit(long bo_no) {
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IBoardDAO mapper = session.getMapper(IBoardDAO.class);
+			mapper.incrementHit(bo_no);
+			session.commit();
+		}
 	}
 
 	@Override

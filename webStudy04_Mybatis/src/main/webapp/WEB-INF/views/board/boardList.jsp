@@ -44,8 +44,8 @@
 		
 		<tbody id="output1">
 			<c:set var="boardList" value="${pagingVO.dataList }"></c:set>
-			<c:if test="${not empty pagingVO.dataList }">
-			<c:forEach items="${pagingVO.dataList}" var="board">
+			<c:if test="${not empty boardList }">
+			<c:forEach items="${boardList}" var="board">
 			<tr>
 				<td>${board.rnum }</td>
 				<td>${board.bo_no }</td>

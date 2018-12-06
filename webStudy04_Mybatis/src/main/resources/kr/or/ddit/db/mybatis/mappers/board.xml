@@ -45,17 +45,19 @@
 	
 	<resultMap type="boardVO" id="replyMap" autoMapping="true">
 		<id property="bo_no" column="BO_NO"/>
-		<collection property="replyList" autoMapping="true" javaType="java.util.List" ofType="replyVO"/>
 <!-- 		javaType은 실제 타입 ofType은 제너릭 타입 boardVO에 있는 replyList를 가져오기 위해 resultMap을 만들어준다 -->
 <!-- 			collection의 property는 boardVO에 있는 replyList라는 프로퍼티명과 같게한다 -->
 	</resultMap>
 	<select id="selectBoard" parameterType="long" resultMap="replyMap">
-		select board.bo_no, bo_writer, bo_pass, bo_ip, bo_mail, bo_title,
-			   bo_content, bo_date, bo_hit, bo_rcmd,
-			   rep_writer, rep_ip, rep_content, rep_date
-		from board left outer join reply on (board.bo_no=reply.bo_no)
-		where board.bo_no = #{board.bo_no}
+		select bo_no, bo_writer, bo_pass, bo_ip, bo_mail, bo_title,
+			   bo_content, bo_date, bo_hit, bo_rcmd
+		from board 
+		where bo_no = #{bo_no}
 	</select>
 	
-	
+	<update id="incrementHit" parameterType="long">
+		UPDATE board
+    	SET bo_hit = bo_hit+1
+		WHERE BO_NO = #{bo_no}
+	</update>
 </mapper>

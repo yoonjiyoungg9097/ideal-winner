@@ -1,41 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+	integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+	crossorigin="anonymous"></script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	crossorigin="anonymous"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
+<script type="text/javascript" src="<c:url value='/js/replyProcess.js'/>"></script>
 <script type="text/javascript">
-	/* function paging(page){
-		$.ajax({
-			url:"${pageContext.request.contextPath}/reply/replyList.do",
-			data:{
-				bo_no:
-			},
-			dataType:"",
-			success:function(resp){
-				var
-				if(resp.dataList){
-					$.each(resp.dataList, function(idx,reply){
-						html
-					}					
-				}else{
-					html +="<tr><td colspan='4']데이터가 없습니다</td></tr>";
-				}
-				pagingArea.html(resp.pagingHTML);
-				listBody.html(html);
-			}, 
-			error:function(){
-				console.log(resp.status);
-			}
-		});
+	$.getContextPath = function(){
+		return "${pageContext.request.contextPath}";
 	}
-	$(function(){
-		pagingArea = $("#pagingArea");
-		listBody = $("#listBody");
-		paging(1);
-	}); */
+	alert($.getContextPath());
 </script>
 </head>
 <body>
@@ -81,7 +72,7 @@
 			<td>${board.bo_rcmd}</td>
 		</tr>
 	</table>
-	
+
 	<table>
 		<thead>
 			<tr>
@@ -91,16 +82,63 @@
 				<th>댓글 작성일</th>
 			</tr>
 		</thead>
-		<tbody>
-			<c:forEach items="${board.replyList }" var="replyList">
-				<tr>
-					<td>${replyList.rep_writer }</td>
-					<td>${replyList.rep_ip }</td>
-					<td>${replyList.rep_content }</td>
-					<td>${replyList.rep_date }</td>
-				</tr>
-			</c:forEach>
+		<tbody id="listBody">
+
 		</tbody>
+
+		<tfoot>
+			<tr>
+				<td colspan="4">
+					<nav aria-label="Page navigation example" id="pagingArea"></nav>
+				</td>
+			</tr>
+		</tfoot>
 	</table>
+	<form action="${pageContext.request.contextPath }/reply/replyInsert.do" method="post" id="insertReply" name="insertReply">
+		<table>
+			<tr>
+				<input type="hidden" name="rep_no">
+				<td>작성자 <input type="text" name="rep_writer">  
+				비밀번호<input type="text" name="rep_pass">
+				</td>
+			</tr>
+
+			<tr>
+				<td><input type="hidden" value="${board.bo_no }" name="bo_no" />
+					<input type="hidden" value="${pageContext.request.remoteAddr }" name="rep_ip" /> 
+					<textarea cols="70" rows="5" name="rep_content"></textarea>
+					<input type="submit" value="등록"></td>
+			</tr>
+		</table>
+	</form>
+	<div class="modal fade" id="replyDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <form onsubmit="return false;" id="modalForm">
+      	<input type="hidden" id="bo_no" value="${board.bo_no }">
+      	<input type="text" id="rep_no" value="">
+      	비밀번호 : <input type="text" id="rep_pass"/>
+      	</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="modalBtn">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	function paging(page){
+		pagingReply(page, ${board.bo_no});
+	}
+	paging(1);
+</script>
 </body>
 </html>

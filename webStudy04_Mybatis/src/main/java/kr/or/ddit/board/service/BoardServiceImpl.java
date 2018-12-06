@@ -39,6 +39,9 @@ public class BoardServiceImpl implements IBoardService {
 		if(board==null) {
 			throw new CommonException();
 		}
+		boardDAO.incrementHit(bo_no); //조회할때마다 조회수가 올라가야 하기 때문에 db에 조회수를 1증가시켜줌 리턴타입이 없기 때문에
+		board.setBo_hit(board.getBo_hit()+1); // 현재 조회수가 0이라면 vo에 0이 담겨있기 때문에 실제 db값과 다르므로 기존의 가져온 vo의 조회수를 1증가시켜줘서
+		//리턴해준다.
 		return board;
 	}
 

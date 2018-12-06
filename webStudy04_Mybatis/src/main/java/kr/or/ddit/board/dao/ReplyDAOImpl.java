@@ -15,8 +15,14 @@ public class ReplyDAOImpl implements IReplyDAO {
 
 	@Override
 	public int insertReply(ReplyVO reply) {
-		// TODO Auto-generated method stub
-		return 0;
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+			int result = mapper.insertReply(reply);
+			if(result>0) session.commit();
+			return result;
+		}
 	}
 
 	@Override
@@ -31,26 +37,46 @@ public class ReplyDAOImpl implements IReplyDAO {
 
 	@Override
 	public List<ReplyVO> selectReplyList(PagingInfoVO<ReplyVO> pagingVO) {
-		// TODO Auto-generated method stub
-		return null;
+		try(
+				SqlSession session = sqlSessionFactory.openSession();
+			){
+				IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+				return mapper.selectReplyList(pagingVO);
+			}
 	}
 
 	@Override
 	public ReplyVO selectReply(long req_no) {
-		// TODO Auto-generated method stub
-		return null;
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+			return mapper.selectReply(req_no);
+		}
 	}
 
 	@Override
 	public int updateReply(ReplyVO reply) {
-		// TODO Auto-generated method stub
-		return 0;
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+			int result = mapper.updateReply(reply);
+			if(result>0) session.commit();
+			return result;
+		}
 	}
 
 	@Override
 	public int deleteReply(long req_no) {
-		// TODO Auto-generated method stub
-		return 0;
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IReplyDAO mapper = session.getMapper(IReplyDAO.class);
+			int result = mapper.deleteReply(req_no);
+			if(result>0) session.commit();
+			return result;
+		}
 	}
 
 }

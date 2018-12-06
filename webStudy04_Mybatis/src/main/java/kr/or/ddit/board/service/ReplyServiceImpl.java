@@ -2,6 +2,7 @@ package kr.or.ddit.board.service;
 
 import java.util.List;
 
+import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.dao.IReplyDAO;
 import kr.or.ddit.board.dao.ReplyDAOImpl;
@@ -14,7 +15,14 @@ public class ReplyServiceImpl implements IReplyService {
 
 	@Override
 	public ServiceResult createReply(ReplyVO reply) {
-		return null;
+		ServiceResult serviceResult = null;
+		int result = replyDAO.insertReply(reply);
+		if(result>0) {
+			serviceResult = ServiceResult.OK;
+		}else {
+			serviceResult = ServiceResult.FAILED;
+		}
+		return serviceResult;
 	}
 
 	@Override
@@ -29,12 +37,40 @@ public class ReplyServiceImpl implements IReplyService {
 
 	@Override
 	public ServiceResult modifyReply(ReplyVO reply) {
-		return null;
+		ServiceResult serviceResult = null;
+		ReplyVO replyVO = replyDAO.selectReply(reply.getRep_no());
+		if(replyVO==null) {
+			throw new CommonException();
+		}
+		if(replyVO.getRep_pass().equals(reply.getRep_pass())) {
+			int result = replyDAO.updateReply(reply);
+			if(result>0) {
+				serviceResult = ServiceResult.OK;
+			}else {
+				serviceResult = ServiceResult.FAILED;
+			}
+		}
+		serviceResult = ServiceResult.INVALIDPASSWORD;
+		return serviceResult;
 	}
 
 	@Override
 	public ServiceResult removeReply(ReplyVO reply) {
-		return null;
+		ServiceResult serviceResult = null;
+		ReplyVO replyVO = replyDAO.selectReply(reply.getRep_no());
+		if(replyVO==null) {
+			throw new CommonException();
+		}
+		if(replyVO.getRep_pass().equals(reply.getRep_pass())) {
+			int result = replyDAO.deleteReply(reply.getRep_no());
+			if(result>0) {
+				serviceResult = ServiceResult.OK;
+			}else {
+				serviceResult = ServiceResult.FAILED;
+			}
+		}
+		serviceResult = ServiceResult.INVALIDPASSWORD;
+		return serviceResult;
 	}
 
 }

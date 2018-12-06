@@ -7,10 +7,44 @@
 		WHERE BO_NO = #{searchVO.bo_no}
 	</select>
 	<select id="selectReplyList" parameterType="pagingVO" resultType="replyVO">
-		FROM()
-		SELECT BO_NO, REP_NO, REP_WRITER, REP_ID, REP_CONTENT, REP_DATE
-		FROM REPLY
-		WHERE BO_NO = #{searchVO.bo_no}
-		ORDER BY REP_NO DESC ) A
+		select b.*
+		from(
+			select a.*, rownum rnum
+			from(
+				SELECT BO_NO, REP_NO, REP_WRITER, REP_IP, REP_CONTENT, REP_DATE
+				FROM REPLY
+				WHERE BO_NO = #{searchVO.bo_no}
+				ORDER BY REP_NO DESC ) A )B
+		where rnum between #{startRow} and #{endRow}
 	</select>
+	
+	<insert id="insertReply" parameterType="replyVO">
+		<selectKey order="BEFORE" keyProperty="rep_no" resultType="long">
+			select nvl(max(rep_no),0)+1 from reply
+		</selectKey>
+		INSERT INTO reply ( rep_no, bo_no, rep_writer,
+    						rep_ip, rep_pass, rep_content, rep_date )
+    	VALUES ( reply_seq.nextval, #{bo_no}, #{rep_writer},
+    			 #{rep_ip}, #{rep_pass}, #{rep_content}, sysdate ) 
+	</insert>
+	
+	<select id="selectReply" parameterType="long" resultType="replyVO">
+		select rep_no, bo_no, rep_writer,
+    		   rep_ip, rep_pass, rep_content, rep_date
+		from reply
+		where rep_no = #{rep_no}
+	</select>
+	
+	<delete id="deleteReply" parameterType="long">
+		DELETE FROM reply
+		WHERE rep_no = #{rep_no}
+	</delete>
+	
+	
+	<update id="updateReply" parameterType="replyVO">
+		UPDATE reply
+		SET rep_content = #{rep_content}
+		WHERE rep_no = #{rep_no}
+	</update>
+	
 </mapper>
