@@ -20,7 +20,7 @@
                   html+="<td>"+reply.rep_ip+"</td>";
                   html+="<td>"+reply.rep_content+"</td>";
                   html+="<td>"+reply.rep_date +"<span data-toggle='modal' class='replyDelBtn'>[삭제]</span></td>    ";
-                  html+="<td><span data-toggle='modal' class=''>[수정]</span></td>    ";
+//                  html+="<td><span data-toggle='modal' class=''>[수정]</span></td>    ";
                   html+="</tr>";
                });
             }else{

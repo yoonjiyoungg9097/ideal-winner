@@ -14,9 +14,11 @@ public class BoardDAOImpl implements IBoardDAO {
 	SqlSessionFactory sqlSessionFactory = CustomSqlSessionFactoryBuilder.getSqlSessionFactory();
 
 	@Override
-	public int insertBoard(BoardVO board) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insertBoard(BoardVO board, SqlSession session) {
+//		IBoardDAO mapper = session.getMapper(IBoardDAO.class);
+//		int result = mapper.insertBoard(board, session);
+//		return result;
+		return session.insert("kr.or.ddit.board.dao.IBoardDAO.insertBoard", board);
 	}
 
 	@Override

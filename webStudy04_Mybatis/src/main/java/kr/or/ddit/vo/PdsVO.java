@@ -1,7 +1,10 @@
 package kr.or.ddit.vo;
 
 import java.io.Serializable;
+import java.util.UUID;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
@@ -11,6 +14,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Alias("pdsVO")
 public class PdsVO implements Serializable {
+	
+	
+	public PdsVO(FileItem item) {
+		super();
+		this.item = item;
+		setPds_size(item.getSize());
+		setPds_fancysize(FileUtils.byteCountToDisplaySize(item.getSize()));
+		setPds_filename(item.getName());
+		setPds_mime(item.getContentType());
+		setPds_savename(UUID.randomUUID().toString());
+	}
 	private Long pds_no;
 	private Long bo_no;
 	private String pds_filename;
@@ -18,5 +32,6 @@ public class PdsVO implements Serializable {
 	private String pds_mime;
 	private Long pds_size;
 	private String pds_fancysize;
+	private FileItem item;
 	
 }

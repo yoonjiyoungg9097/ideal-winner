@@ -35,7 +35,7 @@
 		<table>
 			<tr>
 				<th>회원아이디</th>
-				<td><input type="text" name="mem_id" required="required"
+				<td><input type="text" name="mem_id" 
 					value="${member.mem_id}" /><span class="error">${errors["mem_id"]}</span></td>
 			</tr>
 			<tr>

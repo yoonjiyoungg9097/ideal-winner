@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -24,6 +25,8 @@ import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.validator.GeneralValidator;
+import kr.or.ddit.validator.InsertGroup;
 import kr.or.ddit.vo.MemberVO;
 
 //@WebServlet("/member/memberInsert.do") //URI
@@ -77,10 +80,11 @@ public class MemberInsertController implements ICommandHandler {
 		String goPage = null;
 //		boolean redirect = false;
 		String message = null;
-		Map<String, String> errors = new LinkedHashMap<>();
+		Map<String, List<CharSequence>> errors = new LinkedHashMap<>();
 		req.setAttribute("errors", errors);
-		boolean valid = validate(member, errors);
-		System.err.println(errors.size());
+		GeneralValidator validator = new GeneralValidator();
+		boolean valid = validator.validate(member, errors, InsertGroup.class);
+//		System.err.println(errors.size());
 
 		// 	if(errors.size()>0){
 		if (valid) {
@@ -122,31 +126,4 @@ public class MemberInsertController implements ICommandHandler {
 	}
 	
 	
-	private boolean validate(MemberVO member, Map<String, String> errors){
-		boolean valid = true;
-		if(StringUtils.isBlank(member.getMem_id())){ 
-			valid=false; 
-			errors.put("mem_id", "회원아이디 누락");
-		}
-		if(StringUtils.isBlank(member.getMem_pass())){ 
-			valid=false; 
-			errors.put("mem_pass", "비밀번호 누락");
-		}
-		if(StringUtils.isBlank(member.getMem_name())){ 
-			valid=false; 
-			errors.put("mem_name", "회원명 누락");
-		}
-		if(StringUtils.isNotBlank(member.getMem_bir())){
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
-			// formatting : 특정 타입의 데이터를 일정 형식의 문자열로 변환. String
-			// parsing : 일정한 형식의 문자열을 특정 타입의 데이터로 변환. Date
-			try{
-				formatter.parse(member.getMem_bir()); 
-			}catch(ParseException e){//checked Exception
-				valid = false;
-				errors.put("mem_bir", "날짜 형식 확인");
-			}
-		}
-		return valid;
-	}
 }

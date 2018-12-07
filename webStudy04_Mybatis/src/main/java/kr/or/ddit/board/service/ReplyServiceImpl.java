@@ -49,8 +49,9 @@ public class ReplyServiceImpl implements IReplyService {
 			}else {
 				serviceResult = ServiceResult.FAILED;
 			}
+		}else {
+			serviceResult = ServiceResult.INVALIDPASSWORD;
 		}
-		serviceResult = ServiceResult.INVALIDPASSWORD;
 		return serviceResult;
 	}
 
@@ -68,8 +69,9 @@ public class ReplyServiceImpl implements IReplyService {
 			}else {
 				serviceResult = ServiceResult.FAILED;
 			}
+		}else {
+			serviceResult = ServiceResult.INVALIDPASSWORD;
 		}
-		serviceResult = ServiceResult.INVALIDPASSWORD;
 		return serviceResult;
 	}
 

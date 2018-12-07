@@ -45,14 +45,17 @@
 	
 	<resultMap type="boardVO" id="replyMap" autoMapping="true">
 		<id property="bo_no" column="BO_NO"/>
+		<collection property="pdsList" ofType="pdsVO" autoMapping="true"/>
 <!-- 		javaType은 실제 타입 ofType은 제너릭 타입 boardVO에 있는 replyList를 가져오기 위해 resultMap을 만들어준다 -->
 <!-- 			collection의 property는 boardVO에 있는 replyList라는 프로퍼티명과 같게한다 -->
 	</resultMap>
 	<select id="selectBoard" parameterType="long" resultMap="replyMap">
-		select bo_no, bo_writer, bo_pass, bo_ip, bo_mail, bo_title,
+		select board.bo_no, bo_writer, bo_pass, bo_ip, bo_mail, bo_title,
 			   bo_content, bo_date, bo_hit, bo_rcmd
-		from board 
-		where bo_no = #{bo_no}
+			   , pds_no, pds_savename, pds_filename, pds_size, pds_fancysize
+			   ,pds_mime
+		from board left outer join pds on (board.bo_no=pds.bo_no)
+		where board.bo_no = #{bo_no}
 	</select>
 	
 	<update id="incrementHit" parameterType="long">
@@ -60,4 +63,19 @@
     	SET bo_hit = bo_hit+1
 		WHERE BO_NO = #{bo_no}
 	</update>
+	
+	<insert id="insertBoard" parameterType="boardVO">
+	<selectKey keyProperty="bo_no" resultType="long" order="BEFORE">
+		select board_seq.nextval
+		from dual
+	</selectKey>
+		INSERT INTO board ( BO_NO, BO_WRITER, BO_PASS,
+    						BO_IP, BO_MAIL, BO_TITLE,
+    						BO_CONTENT, BO_DATE, BO_HIT, BO_RCMD
+		) VALUES ( #{bo_no}, #{bo_writer}, #{bo_pass},
+    			   #{bo_ip}, #{bo_mail}, #{bo_title},
+    			   #{bo_content}, sysdate, 0, 0
+		)
+		<!--지영아 조회수와 추천수는 우리가 입력받는게 아니기 때문에 여기서 인서트를해주면 안돼!  -->
+	</insert>
 </mapper>

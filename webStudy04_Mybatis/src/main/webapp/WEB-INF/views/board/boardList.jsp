@@ -80,7 +80,8 @@
 		</select>
 		<input type="text" name="searchWord">
 		<input type="hidden" name="page">
-		<input type="submit" value="검색">
+		<input type="submit" value="검색" >
+		<input type="button" value="새글쓰기" onclick="location.href='${pageContext.request.contextPath}/board/boardInsert.do';"/>
 	</form>
 	
 </body>

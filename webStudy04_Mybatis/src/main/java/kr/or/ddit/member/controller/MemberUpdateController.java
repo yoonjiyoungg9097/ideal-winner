@@ -3,6 +3,7 @@ package kr.or.ddit.member.controller;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -22,6 +23,8 @@ import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.validator.GeneralValidator;
+import kr.or.ddit.validator.UpdateGroup;
 import kr.or.ddit.vo.MemberVO;
 
 //@WebServlet("/member/memberUpdate.do")
@@ -51,11 +54,12 @@ public class MemberUpdateController implements ICommandHandler {
 //		boolean redirect = false;
 		String message = null;
 		//에러메세지를 띄어주기 위해서 errors map을 선언해준다
-		Map<String, String> errors = new LinkedHashMap<>();
+		Map<String, List<CharSequence>> errors = new LinkedHashMap<>();
 		//request 스코프영역에 파라미터명을 "errors" 키값으로 errors맵을 담아준다
 		req.setAttribute("errors", errors);
 		//validate메서드를 불러와서 valid라는 변수에 담아준다
-		boolean valid = validate(member, errors);
+		GeneralValidator validator = new GeneralValidator();
+		boolean valid = validator.validate(member, errors, UpdateGroup.class);
 		
 		if(valid) {
 			
@@ -103,17 +107,4 @@ public class MemberUpdateController implements ICommandHandler {
 		
 	}
 	
-		//필수데이터 검증
-		private boolean validate(MemberVO member, Map<String,String> errors) {
-			boolean valid = true;
-			if(StringUtils.isBlank(member.getMem_pass())) {
-				valid = false;
-				errors.put("mem_pass", "회원 비밀번호 누락");
-			}
-			if(StringUtils.isBlank(member.getMem_name())) {
-				valid = false;
-				errors.put("mem_name", "회원명 누락");
-			}
-			return valid;
-		}
 }

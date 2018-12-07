@@ -1,14 +1,22 @@
 package kr.or.ddit.board.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.session.SqlSession;
 
 import kr.or.ddit.CommonException;
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.board.BoardException;
 import kr.or.ddit.board.dao.BoardDAOImpl;
 import kr.or.ddit.board.dao.IBoardDAO;
 import kr.or.ddit.board.dao.IPdsDAO;
 import kr.or.ddit.board.dao.PdsDAOImpl;
 import kr.or.ddit.buyer.dao.IBuyerDAO;
+import kr.or.ddit.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.PdsVO;
@@ -20,7 +28,39 @@ public class BoardServiceImpl implements IBoardService {
 
 	@Override
 	public ServiceResult createBoard(BoardVO board) {
-		return null;
+		try(
+			SqlSession session = 
+					CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession(false);//한번에 커밋해주는데 false는 우리가 직접ㄱ커밋
+			){
+			int result = boardDAO.insertBoard(board, session);
+			ServiceResult serviceResult = ServiceResult.FAILED;
+			int check = 1;//커밋을 해주기 위한 조건
+			File saveFolder = new File("d:/boardFiles");
+			if(!saveFolder.exists()) saveFolder.mkdirs();
+			if(result>0) {
+				List<PdsVO>pdsList = board.getPdsList();
+				if(pdsList!=null) {
+//					if(1==1)
+//					throw new RuntimeException("트랜잭션 관리 여부 확인을 위한 강제 예외");
+					check += pdsList.size();//? 3
+					result += pdsDAO.insertPdsList(board, session);//
+					for (PdsVO pds : pdsList) {
+						try(
+								InputStream in = pds.getItem().getInputStream();
+						){
+							FileUtils.copyInputStreamToFile(in, new File(saveFolder, pds.getPds_savename()));
+						}catch (IOException e) {
+						}
+					}
+				}
+			}//완벽하지 않으면 커밋해주지 않는다는다 트랜잭션
+			if(result>=check) {//중간에 하나라도 빠지면 커밋을 방지해주는 부분 완전한 게시물이 아니기 때문에 쿼리문 사이즈와 결과값 비교
+				serviceResult = ServiceResult.OK;
+				session.commit();
+			}
+			
+			return serviceResult;
+			}
 	}
 
 	@Override
@@ -57,7 +97,12 @@ public class BoardServiceImpl implements IBoardService {
 
 	@Override
 	public PdsVO downloadPds(long pds_no) {
-		return null;
+		PdsVO pds = new PdsVO();
+		pds = pdsDAO.selectPds(pds_no);
+		if(pds==null) {
+			throw new BoardException();
+		}
+		return pds;
 	}
 
 }

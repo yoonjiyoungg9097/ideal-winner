@@ -1,4 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.board.dao.IPdsDAO">
+	<insert id="insertPds" parameterType="pdsVO">
+	<selectKey keyProperty="pds_no" resultType="long" order="BEFORE">
+		select pds_seq.nextval
+		from dual
+	</selectKey>
+		INSERT INTO pds ( 
+			pds_no, bo_no, pds_filename,
+    		pds_savename, pds_mime, pds_size,
+    		pds_fancysize
+		) VALUES (
+			#{pds_no}, #{bo_no}, #{pds_filename},
+    		#{pds_savename}, #{pds_mime}, #{pds_size},
+    		#{pds_fancysize}
+		)
+	</insert>
+	
+	
+	<insert id="insertPdsList" parameterType="boardVO">
+		insert into pds
+		( 
+				pds_no, bo_no, pds_filename,
+    			pds_savename, pds_mime, pds_size,
+    			pds_fancysize
+		)
+		select pds_seq.nextval, a.*
+		from (
+		<foreach collection="pdsList" item="pds" index="idx" separator="UNION ALL">
+			
+				select #{bo_no}, #{pds.pds_filename},
+	    		#{pds.pds_savename}, #{pds.pds_mime}, #{pds.pds_size},
+    			#{pds.pds_fancysize} from dual
+			
+		</foreach>
+		)a
+	</insert>
+	
+	
+	<select id="selectPds" parameterType="long" resultType="pdsVO">
+		SELECT pds_no, bo_no, pds_filename,
+    		   pds_savename, pds_mime, pds_size,
+    		   pds_fancysize
+		FROM pds
+		where pds_no = #{pds_no}
+	</select>
+	
 </mapper>
