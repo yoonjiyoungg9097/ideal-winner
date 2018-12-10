@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.executor.ResultExtractor;
 import org.apache.ibatis.session.SqlSession;
 
 import kr.or.ddit.CommonException;
@@ -20,47 +21,107 @@ import kr.or.ddit.mybatis.CustomSqlSessionFactoryBuilder;
 import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.PdsVO;
+import sun.nio.fs.DefaultFileSystemProvider;
 
 public class BoardServiceImpl implements IBoardService {
 	
 	IBoardDAO boardDAO = new BoardDAOImpl();
 	IPdsDAO pdsDAO = new PdsDAOImpl();
+	
+//	private int processFiles(BoardVO board, SqlSession session) {
+//		int rowCnt = 0;
+//		List<PdsVO>pdsList = board.getPdsList();
+//		File saveFolder = new File("d:/boardFiles");
+//		if(!saveFolder.exists()) saveFolder.mkdirs();
+//		if(pdsList!=null) {
+////			if(1==1)
+////			throw new RuntimeException("트랜잭션 관리 여부 확인을 위한 강제 예외");
+//			
+//			rowCnt += pdsDAO.insertPdsList(board, session);//
+//			for (PdsVO pds : pdsList) {
+//				try(
+//						InputStream in = pds.getItem().getInputStream();
+//				){
+//					FileUtils.copyInputStreamToFile(in, new File(saveFolder, pds.getPds_savename()));
+//				}catch (IOException e) {
+//				}
+//			}
+//		}
+//		
+//		Long[] delFiles = board.getDelFiles();
+//		if(delFiles!=null) {
+//			check += delFiles.length;
+//			String[] saveNames = new String[delFiles.length];
+//			for(int idx=0; idx<delFiles.length; idx++) {
+//				saveNames[idx] = pdsDAO.selectPds(delFiles[idx]).getPds_savename();
+//			}
+//			rowCnt += pdsDAO.deletePds(board, session);
+//			
+//			for(String savename : saveNames) {
+//				FileUtils.deleteQuietly(new File(saveFolder, savename));
+//			}
+//		}
+//		return rowCnt;
+//	}
+	
+	private ServiceResult pdsInsert(int cnt, SqlSession session, BoardVO board) {
+	      ServiceResult result = ServiceResult.FAILED;
+	      int count = 1;
+	      int totalCount=0;
+	      String saveUrl = "d:/boardFiles";
+	      File saveFolder = new File(saveUrl);// 폴더 생성해줌
+	      if (!saveFolder.exists())
+	         saveFolder.mkdirs();
+
+	      if (cnt > 0) {
+	         if (board.getPdsList() != null) {
+	            count += pdsDAO.insertPdsList(board, session);
+	            for (PdsVO pds : board.getPdsList()) {
+
+	               try (InputStream in = pds.getItem().getInputStream();) {
+	                  FileUtils.copyInputStreamToFile(in, new File(saveFolder, pds.getPds_savename()));
+	               } catch (IOException e) {
+	                  e.printStackTrace();
+	               }
+	            }
+	            totalCount=board.getPdsList().size();
+	         }
+	         if (board.getDelFiles() != null) {
+	            for (Long pds_no : board.getDelFiles()) {
+	               PdsVO pdsVO= pdsDAO.selectPds(pds_no);
+	               if(pdsVO!=null) {
+	                  File delFile=new File(saveFolder,pdsVO.getPds_savename());
+	                  System.out.println("요기는??111");
+	                  System.out.println(delFile.exists());
+	                  int check=pdsDAO.deletePds(pds_no, session);
+	                  if(check>0) {
+	                     if(delFile.delete()) {
+	                        count+=check;
+	                     }
+	                  }
+	               }
+	            }
+	            totalCount+=board.getDelFiles().length;
+	         } 
+	         if (count >= totalCount) {
+
+	            result = ServiceResult.OK;
+	            session.commit();
+
+	         }
+	      }
+	      return result;
+
+	   }
 
 	@Override
 	public ServiceResult createBoard(BoardVO board) {
-		try(
-			SqlSession session = 
-					CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession(false);//한번에 커밋해주는데 false는 우리가 직접ㄱ커밋
-			){
-			int result = boardDAO.insertBoard(board, session);
-			ServiceResult serviceResult = ServiceResult.FAILED;
-			int check = 1;//커밋을 해주기 위한 조건
-			File saveFolder = new File("d:/boardFiles");
-			if(!saveFolder.exists()) saveFolder.mkdirs();
-			if(result>0) {
-				List<PdsVO>pdsList = board.getPdsList();
-				if(pdsList!=null) {
-//					if(1==1)
-//					throw new RuntimeException("트랜잭션 관리 여부 확인을 위한 강제 예외");
-					check += pdsList.size();//? 3
-					result += pdsDAO.insertPdsList(board, session);//
-					for (PdsVO pds : pdsList) {
-						try(
-								InputStream in = pds.getItem().getInputStream();
-						){
-							FileUtils.copyInputStreamToFile(in, new File(saveFolder, pds.getPds_savename()));
-						}catch (IOException e) {
-						}
-					}
-				}
-			}//완벽하지 않으면 커밋해주지 않는다는다 트랜잭션
-			if(result>=check) {//중간에 하나라도 빠지면 커밋을 방지해주는 부분 완전한 게시물이 아니기 때문에 쿼리문 사이즈와 결과값 비교
-				serviceResult = ServiceResult.OK;
-				session.commit();
-			}
-			
-			return serviceResult;
-			}
+		try (SqlSession session = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession(false);) {
+
+	         int cnt = boardDAO.insertBoard(board, session);
+
+	         return pdsInsert(cnt, session, board);
+	      }
 	}
 
 	@Override
@@ -87,7 +148,19 @@ public class BoardServiceImpl implements IBoardService {
 
 	@Override
 	public ServiceResult modifyBoard(BoardVO board) {
-		return null;
+		ServiceResult result;
+	      try (SqlSession session = CustomSqlSessionFactoryBuilder.getSqlSessionFactory().openSession(false);) {
+	         BoardVO  boardVO=boardDAO.selectBoard(board.getBo_no());
+	         if(boardVO!=null && boardVO.getBo_pass().equals(board.getBo_pass())) {
+	            int cnt = boardDAO.updateBoard(board, session);
+	            result= pdsInsert(cnt, session, board);
+	         }else {
+	            result=ServiceResult.INVALIDPASSWORD;
+	         }
+
+
+	         return result;
+	      }
 	}
 
 	@Override

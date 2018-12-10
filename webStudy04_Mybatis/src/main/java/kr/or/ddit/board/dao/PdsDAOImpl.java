@@ -43,8 +43,12 @@ public class PdsDAOImpl implements IPdsDAO {
 	}
 
 	@Override
-	public int deletePds(long pds_no) {
-		// TODO Auto-generated method stub
+	public int deletePds(long pds_no, SqlSession session) {
+		return session.delete("kr.or.ddit.board.dao.IPdsDAO.deletePds",pds_no);
+	}
+
+	@Override
+	public int deletePdses(BoardVO board, SqlSession session) {
 		return 0;
 	}
 

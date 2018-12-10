@@ -12,12 +12,15 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
 import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PagingInfoVO;
 
-public class BoardListController implements ICommandHandler {
+@CommandHandler
+public class BoardListController {
 
-	@Override
+	@URIMapping("/board/boardList.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		IBoardService service = new BoardServiceImpl();
 		PagingInfoVO<BoardVO> pagingVO = new PagingInfoVO<>();

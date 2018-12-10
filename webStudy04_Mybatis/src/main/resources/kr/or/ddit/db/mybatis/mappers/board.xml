@@ -78,4 +78,26 @@
 		)
 		<!--지영아 조회수와 추천수는 우리가 입력받는게 아니기 때문에 여기서 인서트를해주면 안돼!  -->
 	</insert>
+	
+	
+	<update id="updateBoard" parameterType="boardVO">
+		UPDATE board
+			<set>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_mail)">
+    			bo_mail = #{bo_mail},
+    		</if>
+    		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_title)"> 
+    		bo_title = #{bo_title},
+    		</if>
+    		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_content)">
+			bo_content = #{bo_content}
+			</if>
+			</set>
+    	WHERE BO_NO = #{bo_no}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="long">
+		DELETE FROM board
+		WHERE bo_no =#{bo_no}
+	</delete>
 </mapper>

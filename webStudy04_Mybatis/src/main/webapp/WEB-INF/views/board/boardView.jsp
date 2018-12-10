@@ -83,6 +83,17 @@
 			<th>추천수</th>
 			<td>${board.bo_rcmd}</td>
 		</tr>
+		
+		<tr>
+			<td colspan="2">
+			<c:url value="/board/boardUpdate.do" var="updateURL">
+				<c:param name="what" value="${board.bo_no }"/>
+			</c:url>
+				<input type="button" value="수정"
+					onclick="location.href='${updateURL}';"/>
+				<input type="button" value="삭제"/>
+			</td>
+		</tr>
 	</table>
 
 	<table>

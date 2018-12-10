@@ -2,6 +2,7 @@ package kr.or.ddit.board.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,13 +32,18 @@ public class DownloadController implements ICommandHandler{
 		pdsVO = service.downloadPds(pds_no);
 		
 		
+		String fileName= pdsVO.getPds_filename();
 		if(pdsVO!=null) {
 			//파일 객체 생성...<
 			File folder = new File("d:/boardFiles");
 			File pds_file = new File(folder, pdsVO.getPds_savename());
 			resp.setContentType("application/octet-stream");
-			String fileName= pdsVO.getPds_filename();
-		      fileName=new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
+			String agent = req.getHeader("User-Agent");
+			if(StringUtils.containsIgnoreCase(agent, "msie")||StringUtils.containsIgnoreCase(agent, "trident")) {
+				fileName = URLEncoder.encode(fileName, "UTF-8");
+			}else {
+				fileName=new String(fileName.getBytes("UTF-8"),"ISO-8859-1");//비ms계열??
+			}
 			resp.setHeader("Content-Disposition", "attachment;filename=\""+fileName+"\"");
 			//생성한 파일을 읽어와서 내보줘야함
 			FileUtils.copyFile(pds_file, resp.getOutputStream());

@@ -46,4 +46,15 @@
 		where pds_no = #{pds_no}
 	</select>
 	
+	<delete id="deletePds" parameterType="long">
+		delete from pds
+		where pds_no #{pds_no}
+	</delete>
+	<delete id="deletePdses" parameterType="boardVO">
+	delete from pds
+	where pds_no in
+	<foreach collection="delFiles" item="pds_no" open="(" close=")" separator=",">
+	</foreach>
+	</delete>
+	
 </mapper>
