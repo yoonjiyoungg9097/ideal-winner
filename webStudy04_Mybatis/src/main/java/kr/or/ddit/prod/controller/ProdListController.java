@@ -71,7 +71,7 @@ public class ProdListController implements ICommandHandler {
 			resp.setContentType("application/json;charset=UTF-8");//마임을 json으로 설정
 			ObjectMapper mapper = new ObjectMapper(); //마샬링(java->json)
 			try (
-					PrintWriter out = resp.getWriter();
+					PrintWriter out = resp.getWriter();//resp에 응답을 써준다고 해준다
 			){
 				mapper.writeValue(out, pagingVO); //마샬링과 직렬화를 한꺼번에 해주는 부분
 			}

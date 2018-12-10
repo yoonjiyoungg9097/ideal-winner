@@ -1,6 +1,7 @@
 package kr.or.ddit.member.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
@@ -59,6 +62,20 @@ public class MemberListController implements ICommandHandler {
 		String view = "member/memberList";
 		System.err.println(view);
 		req.setAttribute("pagingVO", pagingVO);
+		String header = req.getHeader("Accept");
+		resp.setContentType("application/json;charset=UTF-8");
+		if(StringUtils.containsIgnoreCase(header, "json")) {
+			//objm객체 생성
+			ObjectMapper mapper = new ObjectMapper();
+			//객체.wr
+			
+			try(
+				PrintWriter out = resp.getWriter();
+			){
+				mapper.writeValue(out, pagingVO);
+			}
+			return null;
+		}
 		return view;
 
 	}

@@ -41,6 +41,7 @@ public class FileUploadCheckFilter implements Filter {
 			HttpServletRequest req = (HttpServletRequest)request;
 			int sizeThreshole = 10240;
 			File repository = new File("d:/temp");//파일이 생성될 경로 설정
+			if(!repository.exists()) repository.mkdirs();
 			FileUploadRequestWrapper wrapper = new FileUploadRequestWrapper(req, sizeThreshole, repository);
 			 //랩퍼 객체가 생성될때 요청,크기,파일경로를 받아야하므로 3개의 값을 넘겨줌
 

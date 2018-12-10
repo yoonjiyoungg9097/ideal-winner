@@ -34,11 +34,15 @@ public class DownloadController implements ICommandHandler{
 		if(pdsVO!=null) {
 			//파일 객체 생성...<
 			File folder = new File("d:/boardFiles");
-			File pds_file = new File(folder, pdsVO.getPds_savename());
-			resp.setContentType("application/octet-stream");
-			String fileName= pdsVO.getPds_filename();
-		      fileName=new String(fileName.getBytes("UTF-8"),"ISO-8859-1");
-			resp.setHeader("Content-Disposition", "attachment;filename=\""+fileName+"\"");
+			//파일 가져오는거
+			File pds_file = new File(folder, pdsVO.getPds_savename());//UUID로 생성해준 파일을 가져온다
+			//다른 모든 경우를 위한 기본값입니다. 알려지지 않은 파일 타입은 이 타입을 사용해야 합니다.
+			//확장자를 지원?
+			resp.setContentType("application/octet-stream");//다운로드 해주게하는거
+			String fileName= pdsVO.getPds_filename();//원본파일명
+		      fileName=new String(fileName.getBytes("UTF-8"),"ISO-8859-1");//브라우저마다 인코딩 방식이 달라서 서로에 맞춰ㅓ인코딩해주는 부분
+		      //원본파일명으로 셋팅해주고 다운로드 될 수 있게 한다
+		      resp.setHeader("Content-Disposition", "attachment;filename=\""+fileName+"\"");
 			//생성한 파일을 읽어와서 내보줘야함
 			FileUtils.copyFile(pds_file, resp.getOutputStream());
 		}

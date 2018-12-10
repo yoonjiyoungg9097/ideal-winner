@@ -13,29 +13,28 @@
 	<form method="post" enctype="multipart/form-data">
 	<table>
 		<tr>
-			<th>제목</th>
-			<td>
-				<input type="text" name="bo_title" value="${board.bo_title}">
+			<th colspan="1">제목</th>
+			<td colspan="3">
+				<input type="text" name="bo_title" value="${board.bo_title}" size="20">
 			</td>
 		</tr>
 		<tr>
 			<th>작성자</th>
-			<td>
+			<td >
 				<input type="text" name="bo_writer" value="${board.bo_writer}">
-			</td>
-			<th>비밀번호</th>
-			<td>
+			<span><strong>비밀번호</strong></span>
 				<input type="text" name="bo_pass" value="${board.bo_pass}">
 			</td>
+			
 		</tr>
 		<tr>
-			<th>이메일</th>
-			<td>
+			<th colspan="1">이메일</th>
+			<td colspan="3">
 				<input type="text" name="bo_mail" value="${board.bo_mail}">
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td colspan="2">
 				<div>
 				<textarea rows="30" cols="80" name="bo_content" id="bo_content" value="${board.bo_content}"></textarea>
 				</div>
