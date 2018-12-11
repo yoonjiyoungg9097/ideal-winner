@@ -45,6 +45,11 @@ public class URIMappingCondition {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString() {
+		return "URIMappingCondition [uri=" + uri + ", method=" + method + "]";
+	}
+	
 	
 	
 	

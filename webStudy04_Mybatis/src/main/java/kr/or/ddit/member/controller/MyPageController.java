@@ -12,10 +12,13 @@ import javax.servlet.http.HttpSession;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 
-public class MyPageController implements ICommandHandler {
+@CommandHandler
+public class MyPageController {
+	@URIMapping("/member/mypage.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
 		if(session==null || session.isNew()) {//정상적인 유저가 아니라 이제 막 생성된 유저

@@ -13,12 +13,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.PdsVO;
 
-public class DownloadController implements ICommandHandler{
+@CommandHandler
+public class DownloadController{
 
-	@Override
+	@URIMapping("/board/download.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String what = req.getParameter("what");
 		

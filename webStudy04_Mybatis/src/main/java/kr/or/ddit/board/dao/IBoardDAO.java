@@ -78,7 +78,8 @@ public interface IBoardDAO {
 	/**
 	 * 글 삭제
 	 * @param bo_no
+	 * @param session TODO
 	 * @return row count
 	 */
-	public int deleteBoard(long bo_no);
+	public int deleteBoard(long bo_no, SqlSession session);
 }

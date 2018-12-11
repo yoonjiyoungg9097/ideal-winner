@@ -16,7 +16,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Alias("boardVO")
 public class BoardVO implements Serializable {
+	
+	public BoardVO(Long bo_no, String bo_pass) {
+		super();
+		this.bo_no = bo_no;
+		this.bo_pass = bo_pass;
+	}
+	private Long rnum;
 	private Long bo_no;
+	private Integer bo_level;
+	private Long bo_parent;
 	private String bo_writer;
 	private String bo_pass;
 	private String bo_ip;
@@ -48,5 +57,4 @@ public class BoardVO implements Serializable {
 	
 	
 	
-	private Long rnum;
 }

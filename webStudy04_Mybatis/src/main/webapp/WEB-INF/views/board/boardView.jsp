@@ -26,10 +26,50 @@
 	$.getContextPath = function(){
 		return "${pageContext.request.contextPath}";
 	}
-	alert($.getContextPath());
+	
+	function deleteFunc(bo_no){
+		var bo_pass =  prompt("비밀번호 입력");
+		if(!bo_pass) return;
+		document.deleteForm.bo_pass.value=bo_pass;
+		document.deleteForm.submit();
+	}
+	<c:if test="${not empty message}">
+		alert("${message}");
+		<c:remove var="message" scope="session"/>
+	</c:if>
+	
+	
+	//1. 추천 버튼 만들어주기
+	//2. 버튼 클릭 이벤트 주기
+	//3. 버튼 클릭했을때 deleteForm안에 있는 값 직렬화 해주기
+	$(function(){
+		$("#rcmd").on("click", function(){
+			alert("dddd")
+			var data = $("[name='deleteForm']").serialize();
+			$.ajax({
+				url : "${pageContext.request.contextPath}/board/incrementRcmd.do",
+				method : "post",
+				data : data,
+				dataType : "json",
+				success : function(resp) {
+					var rcmd = resp.bo_rcmd;
+					alert(rcmd)
+					$("#bo_rcmd").text(rcmd);
+				},
+				error : function(resp) {
+
+				}
+			});
+		});
+	});
+	
 </script>
 </head>
 <body>
+	<form name="deleteForm" action='<c:url value='/board/boardDelete.do'></c:url>' method="post">
+		<input type="hidden" name="bo_no" value="${board.bo_no}">
+		<input type="hidden" name="bo_pass">
+	</form>
 	<table>
 		<tr>
 			<th>글번호</th>
@@ -76,12 +116,12 @@
 			<td>${board.bo_date}</td>
 		</tr>
 		<tr>
-			<th>조회수</th>
+			<th>조회수</th>                                     
 			<td>${board.bo_hit}</td>
 		</tr>
 		<tr>
 			<th>추천수</th>
-			<td>${board.bo_rcmd}</td>
+			<td id="bo_rcmd">${board.bo_rcmd}</td>
 		</tr>
 		
 		<tr>
@@ -91,7 +131,13 @@
 			</c:url>
 				<input type="button" value="수정"
 					onclick="location.href='${updateURL}';"/>
-				<input type="button" value="삭제"/>
+				<input type="button" value="삭제" onclick="deleteFunc(${board.bo_no});"/>
+				<c:url value="/board/boardInsert.do" var="insertURL">
+					<c:param name="parent" value="${board.bo_no }"></c:param>
+				</c:url>
+				<input type="button" value="답글쓰기"
+					onclick="location.href='${insertURL}'"/>
+				<input type="button" value="추천" id="rcmd"/>
 			</td>
 		</tr>
 	</table>

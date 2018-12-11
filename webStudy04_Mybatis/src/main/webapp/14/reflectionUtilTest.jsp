@@ -15,6 +15,6 @@
 
 <hr />
 
-<%=ReflectionUtil.getMethodsWithAnnotationAtClass(BoardListController.class, URIMapping.class, String.class, HttpServletRequest.class, HttpServletResponse.class) %>
+<%=ReflectionUtil.getmethodsWithAnnotationAtClass(BoardListController.class, URIMapping.class, String.class, HttpServletRequest.class, HttpServletResponse.class) %>
 </body>
 </html>

@@ -76,6 +76,7 @@
 				<input type="button" value="뒤로가기" onclick="history.back()">
 				<input type="hidden" value="${pageContext.request.remoteAddr}" name="bo_ip" >
 				<input type="hidden" value="${board.bo_no }" name="bo_no">
+				<input type="hidden" value="${param.parent }" name="bo_parent"/>
 			</td>
 		</tr>
 	</table>

@@ -13,12 +13,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 
-//@WebServlet("/member/memberView.do")
-//public class MemberViewServlet extends HttpServlet{
-public class MemberViewController implements ICommandHandler{
+@CommandHandler
+public class MemberViewController{
+	@URIMapping("/member/memberView.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String mem_id = req.getParameter("who");
 		if (StringUtils.isBlank(mem_id)) {

@@ -14,12 +14,17 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.BuyerVO;
 
-public class BuyerDeleteController implements ICommandHandler {
+@CommandHandler
+public class BuyerDeleteController{
+	//B.L.L 과의 의존관계 형성
+	IBuyerService service = new BuyerServiceImpl();
 
-	@Override
+	@URIMapping(value="/buyer/buyerDelete.do", method=HttpMethod.POST)
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		//아이디를 요청받아온다
 		String buyer_id = req.getParameter("buyer_id");
@@ -29,8 +34,6 @@ public class BuyerDeleteController implements ICommandHandler {
 			message = "다시 시도해주세요";
 		}
 		System.out.println(buyer_id+"ㅇ만윔ㄴ윈윙ㅁ뉘ㅏ");
-		//B.L.L 과의 의존관계 형성
-		IBuyerService service = new BuyerServiceImpl();
 		//service를 통해 받아오는 ServiceResult값을 가져온다
 		ServiceResult result = service.removeBuyer(buyer_id);
 		
@@ -50,18 +53,6 @@ public class BuyerDeleteController implements ICommandHandler {
 			break;
 		}
 		
-//		if(result.equals("PKNOTFOUND")) {
-//			message.put("PKNOTFOUND", "존재하지 않는 아이디 입니다ㅜㅠ");
-//			view = "buyer.buyerForm";
-//		}else if(result.equals("OK")) {
-//			//OK일때 delete성공 메세지 dispatcher방식(돌려줄 값이 없기 때문에)
-//			message.put("OK", "삭제성공이다!!");
-//			view = "redirect:buyer.buyerForm";
-//		}else if(result.equals("FAILED")) {
-//			//FAILED일때 서버 오류 메세지 이때 request스코프 영역에 삭제에 실패한 아이디를 담아준다 redirect방식
-//			message.put("FAILED", "서버 오류로 인해 삭제 실패되었으니 다시 시도해주세요 ㅜㅠ");
-//			view = "buyer.buyerForm";
-//		}
 		
 		//message를 request 스코프 영역에 message라는 파라미터명으로 담아주세요
 		req.setAttribute("message", message);

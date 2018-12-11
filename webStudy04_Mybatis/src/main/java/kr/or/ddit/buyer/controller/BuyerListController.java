@@ -12,13 +12,16 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
 import kr.or.ddit.mvc.FrontController;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.PagingInfoVO;
 
-public class BuyerListController implements ICommandHandler {
+@CommandHandler
+public class BuyerListController {
+	IBuyerService service = new BuyerServiceImpl();
 
-	@Override
+	@URIMapping("/buyer/buyerList.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		//처음 들어온 페이지는 1 그래서 현재페이지는 1
 		//--까먹은거-------
@@ -40,7 +43,6 @@ public class BuyerListController implements ICommandHandler {
 		//앞쪽에 redirect:를 붙여주지 않는다
 		//request 스코프 영역에 파라미터로 pagingVO를 담아준다
 		int currentPage = 1;
-		IBuyerService service = new BuyerServiceImpl();
 		long totalPage = service.selectTotalRecord();
 		PagingInfoVO<BuyerVO> pagingVO = new PagingInfoVO();
 		

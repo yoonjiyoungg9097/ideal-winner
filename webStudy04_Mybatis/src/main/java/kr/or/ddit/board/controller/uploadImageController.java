@@ -20,12 +20,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.xml.internal.ws.message.MimeAttachmentSet;
 
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.UploadImageVO;
 
-public class uploadImageController implements ICommandHandler {
+@CommandHandler
+public class uploadImageController{
 
-	@Override
+	@URIMapping("/board/uploadImage.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String saveFolderUrl = "/boardImages";
 		File folder = new File(req.getServletContext().getRealPath(saveFolderUrl));

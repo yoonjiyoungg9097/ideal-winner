@@ -17,7 +17,8 @@
 				<if test="searchType.equals('all')">
 					bo_writer like '%'||#{searchWord}||'%'
 					or
-					bo_title like '%'||#{searchWord}||'%'
+					bo_title like
+					'%'||#{searchWord}||'%'
 					or
 					bo_content like '%'||#{searchWord}||'%'
 				</if>
@@ -28,76 +29,110 @@
 	<select id="selectTotalRecord" resultType="long"
 		parameterType="pagingVO">
 		select count(*) from board
-		<include refid="search"/>
+		<include refid="search" />
 	</select>
 
 	<select id="selectBoardList" parameterType="pagingVO"
 		resultType="boardVO">
 		select b.*
 		from(select rownum rnum, a.*
-		from (select bo_no, bo_title, bo_writer, bo_date, bo_hit, bo_rcmd
+		from (select bo_no, level
+		BO_LEVEL,
+		lpad('Re:', (level-1)*3, ' ')||bo_title BO_TITLE,
+		bo_writer, bo_date,
+		bo_hit, bo_rcmd
 		from board
-		<include refid="search"/>
-		order by bo_no desc) a) b
+		<include refid="search" />
+		start with bo_parent is null
+		connect by prior bo_no = bo_parent
+		order
+		siblings by bo_no desc
+		) a) b
 		where b.rnum between #{startRow} and #{endRow}
 	</select>
-	
-	
+
+
 	<resultMap type="boardVO" id="replyMap" autoMapping="true">
-		<id property="bo_no" column="BO_NO"/>
-		<collection property="pdsList" ofType="pdsVO" autoMapping="true"/>
-<!-- 		javaType은 실제 타입 ofType은 제너릭 타입 boardVO에 있는 replyList를 가져오기 위해 resultMap을 만들어준다 -->
-<!-- 			collection의 property는 boardVO에 있는 replyList라는 프로퍼티명과 같게한다 -->
+		<id property="bo_no" column="BOARD_NO" />
+		<collection property="pdsList" ofType="pdsVO"
+			autoMapping="true" />
+		<!-- javaType은 실제 타입 ofType은 제너릭 타입 boardVO에 있는 replyList를 가져오기 위해 resultMap을 
+			만들어준다 -->
+		<!-- collection의 property는 boardVO에 있는 replyList라는 프로퍼티명과 같게한다 -->
 	</resultMap>
-	<select id="selectBoard" parameterType="long" resultMap="replyMap">
-		select board.bo_no, bo_writer, bo_pass, bo_ip, bo_mail, bo_title,
-			   bo_content, bo_date, bo_hit, bo_rcmd
-			   , pds_no, pds_savename, pds_filename, pds_size, pds_fancysize
-			   ,pds_mime
+	<select id="selectBoard" parameterType="long"
+		resultMap="replyMap">
+		select board.bo_no BOARD_NO, bo_writer, bo_pass, bo_ip, bo_mail,
+		bo_title,
+		bo_content, bo_date, bo_hit, bo_rcmd
+		, pds_no, pds_savename, pds_filename, pds_size, pds_fancysize
+		,pds_mime
 		from board left outer join pds on (board.bo_no=pds.bo_no)
-		where board.bo_no = #{bo_no}
+		where
+		board.bo_no = #{bo_no}
 	</select>
-	
+
 	<update id="incrementHit" parameterType="long">
 		UPDATE board
-    	SET bo_hit = bo_hit+1
+		SET bo_hit = bo_hit+1
 		WHERE BO_NO = #{bo_no}
 	</update>
 	
+	<update id="incrementRcmd" parameterType="long">
+		update board
+		set bo_rcmd = bo_rcmd+1
+		where BO_NO = #{bo_no}
+	</update>
+
 	<insert id="insertBoard" parameterType="boardVO">
-	<selectKey keyProperty="bo_no" resultType="long" order="BEFORE">
-		select board_seq.nextval
-		from dual
-	</selectKey>
+		<selectKey keyProperty="bo_no" resultType="long"
+			order="BEFORE">
+			select board_seq.nextval
+			from dual
+		</selectKey>
 		INSERT INTO board ( BO_NO, BO_WRITER, BO_PASS,
-    						BO_IP, BO_MAIL, BO_TITLE,
-    						BO_CONTENT, BO_DATE, BO_HIT, BO_RCMD
+		BO_IP, BO_MAIL, BO_TITLE,
+		BO_CONTENT, BO_DATE
+		<if test="bo_parent > 0">
+			, BO_PARENT
+		</if>
 		) VALUES ( #{bo_no}, #{bo_writer}, #{bo_pass},
-    			   #{bo_ip}, #{bo_mail}, #{bo_title},
-    			   #{bo_content}, sysdate, 0, 0
+		#{bo_ip}, #{bo_mail}, #{bo_title},
+		#{bo_content}, sysdate
+		<if test="bo_parent > 0">
+			, #{bo_parent,jdbcType=NUMERIC}
+		</if>
 		)
-		<!--지영아 조회수와 추천수는 우리가 입력받는게 아니기 때문에 여기서 인서트를해주면 안돼!  -->
+		<!--지영아 조회수와 추천수는 우리가 입력받는게 아니기 때문에 여기서 인서트를해주면 안돼! -->
 	</insert>
-	
-	
+
+
 	<update id="updateBoard" parameterType="boardVO">
 		UPDATE board
-			<set>
-			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_mail)">
-    			bo_mail = #{bo_mail},
-    		</if>
-    		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_title)"> 
-    		bo_title = #{bo_title},
-    		</if>
-    		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_content)">
-			bo_content = #{bo_content}
+		<set>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_mail)">
+				bo_mail = #{bo_mail},
 			</if>
-			</set>
-    	WHERE BO_NO = #{bo_no}
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_title)">
+				bo_title = #{bo_title},
+			</if>
+			<if
+				test="@org.apache.commons.lang3.StringUtils@isNotBlank(bo_content)">
+				bo_content = #{bo_content}
+			</if>
+		</set>
+		WHERE BO_NO = #{bo_no}
 	</update>
-	
+
 	<delete id="deleteBoard" parameterType="long">
-		DELETE FROM board
-		WHERE bo_no =#{bo_no}
+		delete from board
+		where bo_no in (
+			select bo_no
+			from board
+			start with bo_no = #{bo_no}
+			connect by prior bo_no = bo_parent
+		)
 	</delete>
 </mapper>

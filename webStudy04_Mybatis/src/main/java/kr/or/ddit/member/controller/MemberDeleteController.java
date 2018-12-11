@@ -14,13 +14,14 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.MemberVO;
 
-//@WebServlet("/member/memberDelete.do")
-//public class MemberDeleteServlet extends HttpServlet {
-public class MemberDeleteController implements ICommandHandler {
-	@Override
+@CommandHandler
+public class MemberDeleteController  {
+	@URIMapping(value="/member/memberDelete.do", method=HttpMethod.POST)
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String mem_id = req.getParameter("mem_id");
 		String mem_pass = req.getParameter("mem_pass");

@@ -13,7 +13,7 @@
 // 		//enum과 같은 타입의 Contents 타입으로 그 안의 메소드인 getContents를 통해 받아오는 값을 담아준다
 // 		urlAddress = i.getUrl();
 // 	}
-
+	
 	MemberVO authMember = (MemberVO) session.getAttribute("authMember");
 	String cmdParam = request.getParameter("command");
 	int statusCode = 0;

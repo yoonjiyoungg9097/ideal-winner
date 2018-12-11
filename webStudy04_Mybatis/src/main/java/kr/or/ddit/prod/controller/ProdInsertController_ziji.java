@@ -13,33 +13,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.prod.dao.IOtherDAO;
 import kr.or.ddit.prod.dao.OtherDAOImpl;
 import kr.or.ddit.vo.ProdVO;
 
-public class ProdInsertController_ziji implements ICommandHandler {
+public class ProdInsertController_ziji  {
 	String view = null;
 	Map<String, String> message = new HashMap<>();
+	IOtherDAO otherDAO = new OtherDAOImpl();
 
-	@Override
-	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		String method = req.getMethod();
-		IOtherDAO otherDAO = new OtherDAOImpl();
+	@URIMapping(value="/prod/prodInsert.do", method=HttpMethod.GET)
+	public String doGet(HttpServletRequest req, HttpServletResponse resp) {
 		List<Map<String, Object>>lprodList = otherDAO.selectLprodList();
 		req.setAttribute("lprodList", lprodList);
-		if("get".equalsIgnoreCase(method)) {//처음에 실행될때 get메서드가 실행되어서 이곳으로 오기때문에 prodForm으로 이동한다
-			return "prod/prodForm";
-		}else if("post".equalsIgnoreCase(method)) {//form에서 post방식으로 보내주었기 때문에 이 부분으로 와 처리해준다
-			String post = doPost(req,resp);
-			return post;
-		}else {
-			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-			return null;
-		}
+		return "prod/prodForm";
 	}
 
-	private String doPost(HttpServletRequest req, HttpServletResponse resp) {
+	@URIMapping(value="/prod/prodInsert.do", method=HttpMethod.POST)
+	public String doPost(HttpServletRequest req, HttpServletResponse resp) {
 		//값을 꺼내온다
 		String prod_name = req.getParameter("prod_name");
 		String prod_lgu = req.getParameter("prod_lgu");
@@ -101,15 +94,6 @@ public class ProdInsertController_ziji implements ICommandHandler {
 		prod.setProd_unit(prod_unit);
 		
 		
-		//service로 보내준다
-//		IProdService service = new ProdServiceImpl();
-//		ServiceResult result = service.createProd(prod);
-//		//결과값을 ok(list로),failed(다시 form으로)
-//		if(result.equals(ServiceResult.OK)) {
-//			view = "redirect:/prod/prodList.do";
-//		}else if(result.equals(ServiceResult.FAILED)) {
-//			view = "prod/prodForm";
-//		}
 		return view;
 	}
 	

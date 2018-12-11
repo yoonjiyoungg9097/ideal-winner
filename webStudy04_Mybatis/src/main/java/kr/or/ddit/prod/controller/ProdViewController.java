@@ -8,14 +8,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.prod.service.IProdService;
 import kr.or.ddit.prod.service.ProdServiceImpl;
 import kr.or.ddit.vo.ProdVO;
 
-public class ProdViewController implements ICommandHandler {
+@CommandHandler
+public class ProdViewController{
+	IProdService service = new ProdServiceImpl();
 
-	@Override
+	@URIMapping("/prod/prodView.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String prod_id = req.getParameter("what");
 		if(StringUtils.isBlank(prod_id)) {
@@ -23,7 +26,6 @@ public class ProdViewController implements ICommandHandler {
 			return null;
 		}
 		ProdVO prodVO = new ProdVO();
-		IProdService service = new ProdServiceImpl();
 		prodVO = service.retrieveProd(prod_id);
 		
 		req.setAttribute("prod", prodVO);

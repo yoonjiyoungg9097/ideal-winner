@@ -13,12 +13,15 @@ import org.apache.commons.lang3.StringUtils;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.service.IReplyService;
 import kr.or.ddit.board.service.ReplyServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.ReplyVO;
 
-public class ReplyUpdateController implements ICommandHandler {
+@CommandHandler
+public class ReplyUpdateController{
 
-	@Override
+	@URIMapping(value="/reply/replyUpdate.do", method=HttpMethod.POST)
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String rep_noStr = req.getParameter("rep_no");
 		String rep_pass = req.getParameter("rep_pass");

@@ -22,18 +22,19 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.validator.GeneralValidator;
 import kr.or.ddit.validator.UpdateGroup;
 import kr.or.ddit.vo.MemberVO;
 
-//@WebServlet("/member/memberUpdate.do")
-//public class MemberUpdateServlet extends HttpServlet {
-public class MemberUpdateController implements ICommandHandler {
-	@Override
+@CommandHandler
+public class MemberUpdateController {
+	@URIMapping(value="/member/memberUpdate.do", method=HttpMethod.POST)
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//입력한 값에 특수문자등을 처리해주기 위해서 인코딩해주는 부분
-//		req.setCharacterEncoding("UTF-8");
+//		req.setCharacterEncoding("UTF-8");                                                            
 		//memberView.jsp에서 입력한 값을 담은 VO - 이 VO에서 파라미터 값들을 가져오기 위해서 선언해준다
 		MemberVO member = new MemberVO();
 		

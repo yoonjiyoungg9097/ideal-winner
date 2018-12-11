@@ -147,7 +147,11 @@
 					<tr>
 						<td>${board.rnum }</td>
 						<td>${board.bo_no }</td>
-						<td>${board.bo_title }</td>
+						<td>
+						<c:forEach begin="2" end="${board.bo_level }">
+							&nbsp;
+						</c:forEach>
+						${board.bo_title }</td>
 						<td>${board.bo_writer }</td>
 						<td>${board.bo_date }</td>
 						<td>${board.bo_hit }</td>

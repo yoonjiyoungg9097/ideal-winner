@@ -21,24 +21,26 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.validator.GeneralValidator;
 import kr.or.ddit.validator.InsertGroup;
 import kr.or.ddit.vo.BoardVO;
 import kr.or.ddit.vo.PdsVO;
 
-public class BoardInsertController implements ICommandHandler {
+@CommandHandler
+public class BoardInsertController {
 
-	@Override
-	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		// 1. V.L : board/boardForm 
-		// 2. 게시글에 첨부파일이 최대 3건 (partname=bo_file)
-		// 3. 첨부파일 저장 위치 : d:/boardFiles
-		
+	@URIMapping(value="/board/boardInsert.do", method=HttpMethod.GET)
+	public String getProcess(HttpServletRequest req, HttpServletResponse resp) {
+		return "board/boardForm";
+	}
+	@URIMapping(value="/board/boardInsert.do", method=HttpMethod.POST)
+	public String postProcess(HttpServletRequest req, HttpServletResponse resp) {
 		String page = null;
 		String method = req.getMethod();
 		if("get".equalsIgnoreCase(method)) {
-			return "board/boardForm";
 		}else if("post".equalsIgnoreCase(method)) {
 			BoardVO board = new BoardVO();
 			req.setAttribute("board", board);
@@ -71,11 +73,10 @@ public class BoardInsertController implements ICommandHandler {
 			}else {
 				page = "board/boardForm";
 			}
-		}else {
-			resp.sendError(405);
-			return null;
 		}
 	
 	return page;
 	}
+	
+
 }

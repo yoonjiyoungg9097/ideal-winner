@@ -14,8 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kr.or.ddit.mvc.ICommandHandler;
 import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.prod.dao.IOtherDAO;
 import kr.or.ddit.prod.dao.OtherDAOImpl;
 import kr.or.ddit.prod.service.IProdService;
@@ -25,9 +25,11 @@ import kr.or.ddit.vo.PagingInfoVO;
 import kr.or.ddit.vo.ProdVO;
 
 @CommandHandler
-public class ProdListController implements ICommandHandler {
+public class ProdListController{
+	IProdService service = new ProdServiceImpl();
+	IOtherDAO otherDAO = new OtherDAOImpl();
 
-	@Override
+	@URIMapping("/prod/prodList.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		//제일 먼저 시작하는 페이지는 1이므로 currentPage=1
 		int currentPage = 1;
@@ -47,8 +49,6 @@ public class ProdListController implements ICommandHandler {
 		//currentpage를 파라미터로 받는 paginvo에 그 값을 전달해준다
 		pagingVO.setCurrentPage(currentPage);
 		
-		IProdService service = new ProdServiceImpl();
-		IOtherDAO otherDAO = new OtherDAOImpl();
 		List<Map<String, Object>>lprodList = otherDAO.selectLprodList();
 		List<BuyerVO>buyerList = otherDAO.selectBuyerList(null);
 		req.setAttribute("lprodList", lprodList);

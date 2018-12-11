@@ -6,63 +6,77 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
+import kr.or.ddit.validator.GeneralValidator;
+import kr.or.ddit.validator.UpdateGroup;
 import kr.or.ddit.vo.BoardVO;
 
-public class boardUpdateController implements ICommandHandler {
+@CommandHandler
+public class boardUpdateController{
+	IBoardService service = new BoardServiceImpl();
 
-	@Override
-	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-//		1. V.L : "board/boardForm"
-//		2. 기존 첨부파일 있다면, 삭제 가능하도록
-//		3. 새로운 첨부파일이 있다면, 업로드
-		
-		String method = req.getMethod();
-		IBoardService service = new BoardServiceImpl();
-		BoardVO board = new BoardVO(); //Command Object?
-		String Page = null;
-		long bo_no = 0;
-		if("get".equalsIgnoreCase(method)) {
-			String what = req.getParameter("what");
-			if(StringUtils.isNumeric(what)) {
-				bo_no = Long.parseLong(what);
-			}
-			board = service.retriveBoard(bo_no);
-			req.setAttribute("board", board);
-			return "board/boardForm";
-		}else if("post".equalsIgnoreCase(method)) {
-			try {
-				BeanUtils.populate(board, req.getParameterMap());
-			} catch (IllegalAccessException | InvocationTargetException e) {
-				throw new RuntimeException(e);
-			}
-			Map<String, List<CharSequence>>errors = new HashMap<>();
-			ServiceResult result = service.modifyBoard(board);
-			switch (result) {
-			case OK:
-				// POST-redirect-GET : PRG 패턴
-				Page = "redirect:/board/boardView.do?what="+board.getBo_no();
-				break;
-			case INVALIDPASSWORD:
-				Page = "board/boardView?what"+board.getBo_no();
-				break;
-			case FAILED:
-				Page = "board/boardForm";
-				break;
-
-			}
+	@URIMapping("/board/boardUpdate.do")
+	public String getProcess(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String what = req.getParameter("what");
+		if(!StringUtils.isNumeric(what)) {
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return null;
 		}
-		return Page;
+		long bo_no = Long.parseLong(what);
+		BoardVO board = new BoardVO(); //Command Object?
+		board = service.retriveBoard(bo_no);
+		req.setAttribute("board", board);
+		return "board/boardForm";
 	}
-
+		
+	@URIMapping(value="/board/boardUpdate.do", method=HttpMethod.POST)
+	public String postProcess(HttpServletRequest req, HttpServletResponse resp) throws IOException {BoardVO board= new BoardVO();
+    
+    try {
+       BeanUtils.populate(board, req.getParameterMap());
+    } catch (IllegalAccessException | InvocationTargetException e) {
+       e.printStackTrace();
+    }
+    Map<String, List<CharSequence>> errors=new HashMap<>();
+    GeneralValidator validator=new GeneralValidator();
+    boolean valid=validator.validate(board, errors, UpdateGroup.class);
+    String view="board/boardForm";
+    if(valid) {
+       if(req instanceof FileUploadRequestWrapper) {
+          List<FileItem> fileItems= ((FileUploadRequestWrapper) req).getFileItems("bo_file");
+          board.setItemList(fileItems);
+       }
+       ServiceResult res= service.modifyBoard(board);
+       switch (res) {
+       case OK:
+          //PRG패턴 포스트- 리다이렉트 - 겟요청 
+          view="redirect:/board/boardView.do?what="+board.getBo_no();
+          break;
+       case FAILED:
+          req.setAttribute("message", "서버오류랑");
+          break;
+       case INVALIDPASSWORD:
+          req.setAttribute("message", "비번틀렸당");
+          
+          break;
+       }
+       
+    }
+    req.setAttribute("errors",errors );
+    req.setAttribute("board", board);
+	return view;
+	}
 }

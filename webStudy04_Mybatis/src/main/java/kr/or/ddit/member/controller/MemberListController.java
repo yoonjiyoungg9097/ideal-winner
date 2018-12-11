@@ -14,15 +14,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import kr.or.ddit.member.service.IMemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
-import kr.or.ddit.mvc.ICommandHandler;
+import kr.or.ddit.mvc.annotation.CommandHandler;
+import kr.or.ddit.mvc.annotation.URIMapping;
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingInfoVO;
 
-//@WebServlet("/member/memberList.do")
-//public class MemberListServlet extends HttpServlet{
-public class MemberListController implements ICommandHandler {
-//	@Override
-//	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+@CommandHandler
+public class MemberListController{
+	
+	@URIMapping("/member/memberList.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 //		1. 요청과의 매핑 설정
 //		2. 요청 분석(주소, 파라미터, 메소드, 헤더들)
