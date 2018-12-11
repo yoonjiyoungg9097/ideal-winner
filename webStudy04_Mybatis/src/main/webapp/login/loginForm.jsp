@@ -17,7 +17,7 @@
 </head>
 <body>
 	<!-- 모든 인증처리는 post방식 get방식은 기본적으로 해킹된 정보라고 인식한다 -->
-	<form action="<c:url value='/loging/loginCheck.do'/>" method="post"> <!-- 이 주소는 브라우저가 사용 클라이언트 사이드 그래서 contextpath가 필요로 하다 -->
+	<form action="<c:url value='/login/loginCheck.do'/>" method="post"> <!-- 이 주소는 브라우저가 사용 클라이언트 사이드 그래서 contextpath가 필요로 하다 -->
 		<ul>
 			<li>
 				<c:set var="savedId" value="${cookie['idCookie']['value'] }"></c:set>

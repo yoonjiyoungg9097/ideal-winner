@@ -78,7 +78,7 @@
 					
 					if(authMember!=null){
 				%>
-				<a href="<%=request.getContextPath() %>/member/mypage.do"><%=authMember.getMem_name() %></a>님 (<%=authMember.getMem_auth() %>), <a href="<%=request.getContextPath()%>/login/logout.jsp">로그아웃</a>
+				<a href="<%=request.getContextPath() %>/member/mypage.do"><%=authMember.getMem_name() %></a>님 (<%=authMember.getMem_auth() %>), <a href="<%=request.getContextPath()%>/login/loginCheck.do">로그아웃</a>
 		
 				<% 
 					}else{

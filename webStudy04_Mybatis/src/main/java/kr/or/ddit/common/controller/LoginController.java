@@ -24,7 +24,7 @@ import kr.or.ddit.vo.MemberVO;
 public class LoginController {
 	IAuthenticateService service = new AuthenticateServiceImpl();
 
-	@URIMapping(value = "redirect:/login/loginCheck.do", method = HttpMethod.POST)
+	@URIMapping(value = "/login/loginCheck.do", method = HttpMethod.POST)
 	public String login(HttpServletRequest req, HttpServletResponse resp) {
 		HttpSession session = req.getSession();
 		// 아이디나 비밀번호에 특수문자라 있을 경우 처리해주는 부분
@@ -79,7 +79,7 @@ public class LoginController {
 		return goPage;
 	}
 
-	@URIMapping(value = "/login/loginout.do", method = HttpMethod.GET)
+	@URIMapping(value = "/login/loginCheck.do", method = HttpMethod.GET)
 	public String logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		HttpSession session = req.getSession();
 // 	session.removeAttribute("authMember");
