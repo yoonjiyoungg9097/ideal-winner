@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -68,6 +69,7 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 					String partname = item.getFieldName();// 파라미터명
 					//파트에 담긴 input태그의 타입이 file이면 펄스, 아니면 트루
 					if (item.isFormField()) {// 파일데이터인지
+						System.out.println(partname+"파트명:");
 						// 5. 일반 문자열 기반의 FileItem 에 대한 처리와
 						String parameterValue = null;
 						if(request.getCharacterEncoding()!=null) {
@@ -87,6 +89,7 @@ public class FileUploadRequestWrapper extends HttpServletRequestWrapper {
 						//1회차일경우 values의 0번째 방에 utf-8담아줌 
 						values[values.length - 1] = parameterValue;
 						parameterMap.put(partname, values);
+						System.out.println(Arrays.toString(parameterMap.get(partname)) );
 					} else {
 						// 파일을 선택하지 않으면 비어있는 part를 skip
 						if (StringUtils.isBlank(item.getName())) {// 파일이 선택되지 않았는데 만들어질때??????

@@ -55,21 +55,21 @@
 		var nar=$("#page2");
 		$("[name='searchForm']").on("submit", function(event){<!-- 	onsubmit="return false;" -->
 			event.preventDefault();//form은 기본적으로 동기전송방식인데 그거 없애는거
-			var data = $(this).serialize(); //queryString 생성
+			var data = $(this).serialize(); //queryString 생성 name:value (태그들의)
 // 			{
 // 				prod_lgu: dff
 // 				prod_buyer: fdfsfd
 				
 // 			}
 			$.ajax({
-// 				url : "", //어디로 요청을 보내는지 생략가능한건 현재 브라우저의 주소 사용
+// 				url : "", //어디로 요청을 보내는지 생략가능한건 현재 브라우저의 주소 사용 ex)insert.do
 // 				method : "", //디폴트는 get방식
 				data:data,//어떤 데이터를 보내는지 위의 쿼리스트링을 넣어준다
 				dataType : "json", //Accept/Content-type
 				success : function(resp) {//응답데이터가 언마샬링 된거 resp는 pagingVO
 					var prodList = resp.dataList;
 					var html = "";
-					if(prodList){
+					if(prodList){//prodList값이  있으면 true 없으면 false
 						$.each(prodList, function(idx, prod){
 							html += "<tr>";
 							html += "<td>"+prod.prod_id+"</td>";
@@ -86,7 +86,7 @@
 					}
 					listBody.html(html);
 					$("#pagingArea").html(resp.pagingHTML);
-					$("[name='page']").val("");
+					$("[name='page']").val("");//페이지 초기화
 				},
 				error : function(resp) {
 

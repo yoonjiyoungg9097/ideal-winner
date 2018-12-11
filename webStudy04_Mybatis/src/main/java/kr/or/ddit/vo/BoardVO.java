@@ -44,10 +44,10 @@ public class BoardVO implements Serializable {
 	public void setItemList(List<FileItem> fileItems) {
 		this.itemList = itemList;
 		List<PdsVO>pdsList = null;
-		if(fileItems!=null) {
+		if(fileItems!=null) {//첨부파일이 존재할때 null이 아닐때
 			pdsList = new ArrayList<>();
 			for (FileItem item : fileItems) {
-				pdsList.add(new PdsVO(item));
+				pdsList.add(new PdsVO(item));//pdsList에 추가해준다
 		
 			}
 			this.pdsList = pdsList;

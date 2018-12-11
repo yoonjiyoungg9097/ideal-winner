@@ -74,50 +74,7 @@ public class MemberVO implements Serializable{
 		return Objects.toString(mem_add1,"")+" "+Objects.toString(mem_add2,"");
 	}
 	
-//	@Override
-//	public int hashCode() {
-//		final int prime = 31;
-//		int result = 1;
-//		result = prime * result + ((mem_id == null) ? 0 : mem_id.hashCode());
-//		result = prime * result + ((mem_regno1 == null) ? 0 : mem_regno1.hashCode());
-//		result = prime * result + ((mem_regno2 == null) ? 0 : mem_regno2.hashCode());
-//		return result;
-//	}
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (obj == null)
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		MemberVO other = (MemberVO) obj;
-//		if (mem_id == null) {
-//			if (other.mem_id != null)
-//				return false;
-//		} else if (!mem_id.equals(other.mem_id))
-//			return false;
-//		if (mem_regno1 == null) {
-//			if (other.mem_regno1 != null)
-//				return false;
-//		} else if (!mem_regno1.equals(other.mem_regno1))
-//			return false;
-//		if (mem_regno2 == null) {
-//			if (other.mem_regno2 != null)
-//				return false;
-//		} else if (!mem_regno2.equals(other.mem_regno2))
-//			return false;
-//		return true;
-//	}
-//	@Override
-//	public String toString() {
-//		return "MemberVO [mem_id=" + mem_id + ", mem_pass=" + mem_pass + ", mem_name=" + mem_name + ", mem_regno1="
-//				+ mem_regno1 + ", mem_regno2=" + mem_regno2 + ", mem_bir=" + mem_bir + ", mem_zip=" + mem_zip
-//				+ ", mem_add1=" + mem_add1 + ", mem_add2=" + mem_add2 + ", mem_hometel=" + mem_hometel + ", mem_comtel="
-//				+ mem_comtel + ", mem_hp=" + mem_hp + ", mem_mail=" + mem_mail + ", mem_job=" + mem_job + ", mem_like="
-//				+ mem_like + ", mem_memorial=" + mem_memorial + ", mem_memorialday=" + mem_memorialday
-//				+ ", mem_mileage=" + mem_mileage + ", mem_delete=" + mem_delete + "]";
-//	}
+
 	
 	public String getAddressTest() {
 		return "테스트";

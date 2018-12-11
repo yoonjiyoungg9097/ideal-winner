@@ -1,6 +1,7 @@
 package kr.or.ddit.buyer.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -8,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.ddit.buyer.service.BuyerServiceImpl;
 import kr.or.ddit.buyer.service.IBuyerService;
@@ -64,7 +67,28 @@ public class BuyerListController {
 		String view = "buyer/buyerList";
 		req.setAttribute("pagingVO", pagingVO);
 		pagingVO.setDataList(buyerList);
+		
+		
+		//처음에 동기방식일때와 비동기일때 구분해준다
+		String header = req.getHeader("Accept");
+		resp.setContentType("application/json;charset=UTF-8");
+		if(StringUtils.containsIgnoreCase(header, "json")) {
+			//objectMapper 객체 생성
+			ObjectMapper mapper = new ObjectMapper();
+			try(
+				//응답데이터를 써주겠다고 선언해주는 부분
+				PrintWriter out = resp.getWriter();
+			){
+				mapper.writeValue(out, pagingVO);//마샬링과 직렬화를 직접적으로 해주는 부분
+			}
+			return null;
+		}
+		
 		return view;
+		
+		
+		
+		
 	}
 
 }

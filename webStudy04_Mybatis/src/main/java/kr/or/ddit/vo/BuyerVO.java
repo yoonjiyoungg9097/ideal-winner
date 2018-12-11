@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Data 
 @NoArgsConstructor 
 public class BuyerVO implements Serializable{
-	private String buyer_delete;
 	private String buyer_id;
 	private String buyer_name;
 	private String buyer_lgu;
@@ -27,4 +26,5 @@ public class BuyerVO implements Serializable{
 	private String buyer_mail;
 	private String buyer_charger;
 	private String buyer_telext;
+	private String buyer_delete;
 }

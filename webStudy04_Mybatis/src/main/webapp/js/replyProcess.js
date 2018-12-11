@@ -19,12 +19,12 @@
                   html+="<td>"+reply.rep_writer+"</td>";
                   html+="<td>"+reply.rep_ip+"</td>";
                   html+="<td>"+reply.rep_content+"</td>";
-                  html+="<td>"+reply.rep_date +"<span data-toggle='modal' class='replyDelBtn'>[삭제]</span></td>    ";
+                  html+="<td>"+reply.rep_date +"<span data-toggle='modal' class='replyDelBtn'>[삭제]</span></td>";
 //                  html+="<td><span data-toggle='modal' class=''>[수정]</span></td>    ";
                   html+="</tr>";
                });
             }else{
-               html+="<tr><td colspan='4'> 데이터없즘 .</td></tr>";
+               html+="<tr><td colspan='4'> 데이터없음</td></tr>";
             }
             pagingArea.html(resp.pagingHTML);
             listBody.html(html);

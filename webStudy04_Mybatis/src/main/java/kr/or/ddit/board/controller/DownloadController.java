@@ -38,7 +38,6 @@ public class DownloadController{
 		if(pdsVO!=null) {
 			//파일 객체 생성...<
 			File folder = new File("d:/boardFiles");
-			File pds_file = new File(folder, pdsVO.getPds_savename());
 			resp.setContentType("application/octet-stream");
 			String agent = req.getHeader("User-Agent");
 			if(StringUtils.containsIgnoreCase(agent, "msie")||StringUtils.containsIgnoreCase(agent, "trident")) {
@@ -47,6 +46,11 @@ public class DownloadController{
 				fileName=new String(fileName.getBytes("UTF-8"),"ISO-8859-1");//비ms계열??
 			}
 			resp.setHeader("Content-Disposition", "attachment;filename=\""+fileName+"\"");
+			//파일 가져오는거
+			File pds_file = new File(folder, pdsVO.getPds_savename());//UUID로 생성해준 파일을 가져온다
+			//다른 모든 경우를 위한 기본값입니다. 알려지지 않은 파일 타입은 이 타입을 사용해야 합니다.
+			//확장자를 지원?
+		      //원본파일명으로 셋팅해주고 다운로드 될 수 있게 한다
 			//생성한 파일을 읽어와서 내보줘야함
 			FileUtils.copyFile(pds_file, resp.getOutputStream());
 		}
