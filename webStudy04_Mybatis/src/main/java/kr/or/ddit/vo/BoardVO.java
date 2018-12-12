@@ -10,10 +10,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(of= {"bo_no", "bo_writer"})
 @Alias("boardVO")
 public class BoardVO implements Serializable {
 	

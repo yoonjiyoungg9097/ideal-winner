@@ -18,10 +18,9 @@ import kr.or.ddit.vo.PagingInfoVO;
 
 @CommandHandler
 public class BoardListController {
-
+	IBoardService service = new BoardServiceImpl();
 	@URIMapping("/board/boardList.do")
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		IBoardService service = new BoardServiceImpl();
 		PagingInfoVO<BoardVO> pagingVO = new PagingInfoVO<>();
 		long currentPage = 1;
 		String page = req.getParameter("page");

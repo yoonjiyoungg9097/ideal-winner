@@ -3,6 +3,11 @@ package kr.or.ddit.vo;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.ibatis.type.Alias;
@@ -20,7 +25,7 @@ import lombok.ToString;
 @ToString(exclude= {"mem_img"})
 @NoArgsConstructor
 @EqualsAndHashCode(of= {"mem_id", "mem_regno1", "mem_regno2"})
-public class MemberVO implements Serializable{
+public class MemberVO implements Serializable, HttpSessionBindingListener{
 	
 	
 	public MemberVO(String mem_id, String mem_pass) {
@@ -78,6 +83,27 @@ public class MemberVO implements Serializable{
 	
 	public String getAddressTest() {
 		return "테스트";
+	}
+
+
+	@Override
+	public void valueBound(HttpSessionBindingEvent event) {
+		if("authMember".equals(event.getName())){
+			ServletContext application = event.getSession().getServletContext();
+			Set<MemberVO> applicationUsers = (Set<MemberVO>)application.getAttribute("applicationUsers");
+			applicationUsers.add(this);
+		}
+	}
+
+
+
+	@Override
+	public void valueUnbound(HttpSessionBindingEvent event) {
+		if("authMember".equals(event.getName())){
+			ServletContext application = event.getSession().getServletContext();
+			Set<MemberVO> applicationUsers = (Set<MemberVO>)application.getAttribute("applicationUsers");
+			applicationUsers.remove(this);
+		}
 	}
 	
 }
