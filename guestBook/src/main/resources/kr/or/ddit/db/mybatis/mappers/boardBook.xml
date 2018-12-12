@@ -8,4 +8,12 @@
 			   BO_DATE, BO_HIT, BO_RCMD
 		FROM BOARDBOOK
 	</select>
+	
+<!-- 	<select id="selectBoardBook" parameterType="long" resultType="boardBookVO"> -->
+<!-- 		SELECT BO_NO, BOARD_WRITER, BO_PASS, BO_IP, -->
+<!-- 			   BO_MAIL, BO_TITLE, BO_CONTENT, -->
+<!-- 			   BO_DATE, BO_HIT, BO_RCMD -->
+<!-- 		FROM BOARDBOOK -->
+<!-- 		WHERE BO_NO = #{bo_no} -->
+<!-- 	</select> -->
 </mapper>
