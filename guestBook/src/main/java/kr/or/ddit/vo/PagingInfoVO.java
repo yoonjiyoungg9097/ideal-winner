@@ -2,11 +2,14 @@ package kr.or.ddit.vo;
 
 import java.util.List;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Alias("pagingVO")
 public class PagingInfoVO<T> {
 	private long totalRecord;
 	private int screenSize;

@@ -67,21 +67,5 @@ public class BoardBookDAOImpl implements IBoardBookDAO {
 		return 0;
 	}
 
-	@Override
-	public void incrementHit(long bo_no) {
-//		try(
-//			SqlSession session = sqlSessionFactory.openSession();
-//		){
-//			IBoardBookDAO mapper = session.getMapper(IBoardBookDAO.class);
-//			mapper.incrementHit(bo_no);
-//		}
-	}
-
-	@Override
-	public void incrementRcmd(long bo_no) {
-
-	}
-
-
 
 }

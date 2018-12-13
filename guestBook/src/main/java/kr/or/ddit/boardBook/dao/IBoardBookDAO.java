@@ -19,7 +19,5 @@ public interface IBoardBookDAO {
 	
 	public int deleteBoardBook(long bo_no);
 	
-	public void incrementHit(long bo_no);
 	
-	public void incrementRcmd(long bo_no);
 }

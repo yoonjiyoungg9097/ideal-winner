@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.boardBook.dao.IBoardBookDAO">
-	<select id="selectBoardBookList" parameterType="pagingVO"
-		resultType="boardBookVO">
+	<select id="selectTotalRecord" resultType="long" parameterType="pagingVO">
+		select count(*) from boardbook	
+	</select>
+	
+	<select id="selectBoardBookList" parameterType="pagingVO" resultType="boardBookVO">
 		SELECT BO_NO, BOARD_WRITER, BO_PASS, BO_IP,
-			   BO_MAIL, BO_TITLE, BO_CONTENT,
-			   BO_DATE, BO_HIT, BO_RCMD
+			   BO_CONTENT, BO_DATE
 		FROM BOARDBOOK
 	</select>
 	
