@@ -38,6 +38,8 @@ public class BoardBookServiceImpl implements IBoardBookService {
 	
 	@Override
 	public ServiceResult modifyBoardBook(BoardBookVO boardBook) {
+		ServiceResult serviceResult;
+		int result = boardBookDAO.updateBoardBook(boardBook);
 		return null;
 	}
 

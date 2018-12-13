@@ -57,7 +57,14 @@ public class BoardBookDAOImpl implements IBoardBookDAO {
 
 	@Override
 	public int updateBoardBook(BoardBookVO boardBook) {
-		return 0;
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IBoardBookDAO mapper = session.getMapper(IBoardBookDAO.class);
+			int result = mapper.updateBoardBook(boardBook);
+			if(result>0)session.commit();
+			return result;
+		}
 	}
 
 	@Override

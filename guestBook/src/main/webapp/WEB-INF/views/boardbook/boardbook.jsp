@@ -60,12 +60,12 @@
 			data : data,
 			dataType : "json",
 			success : function(resp) {
-				$("[name='searchForm']").submit();
+				$("[name='searchForm']").submit();z
 			}
 
 		});
-	
-	$("#delBoardbook").on("click", function(){
+	});
+	$("#listBody").delegate("#delBoardbook","click", function(){
 		var trId=$(this).closest("tr").prop("id");
 		var bo_no = trId.substring(trId.indexOf("_")+1);
 		alert(bo_no);
@@ -94,7 +94,6 @@
 		});
 			${pagingVO.funcName}(1);
 	});
-}); 
 }); 
 	
 </script>

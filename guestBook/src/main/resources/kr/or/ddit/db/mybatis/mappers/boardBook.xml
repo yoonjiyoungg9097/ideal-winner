@@ -42,5 +42,12 @@
 		WHERE
 		bo_no = #{bo_no}
 	</delete>
+	
+	<update id="updateBoardBook" parameterType="boardBookVO">
+		UPDATE boardbook
+		SET 
+		BO_CONTENT = #{bo_content}
+		WHERE BO_NO = #{bo_no}
+	</update>
 
 </mapper>
