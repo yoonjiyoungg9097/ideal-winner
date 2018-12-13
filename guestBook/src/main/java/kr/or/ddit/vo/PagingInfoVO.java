@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Alias("pagingVO")
 public class PagingInfoVO<T> {
 	private long totalRecord;
-	private int screenSize;
-	private int blockSize;
+	private int screenSize=10;
+	private int blockSize=5;
 	private long currentPage;
 	private long totalPage;
 	private long startPage;

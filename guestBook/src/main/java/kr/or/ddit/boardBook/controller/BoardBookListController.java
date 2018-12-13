@@ -15,6 +15,7 @@ import kr.or.ddit.boardBook.service.BoardBookServiceImpl;
 import kr.or.ddit.boardBook.service.IBoardBookService;
 import kr.or.ddit.mvc.annotation.CommandHandler;
 import kr.or.ddit.mvc.annotation.URIMapping;
+import kr.or.ddit.mvc.annotation.URIMapping.HttpMethod;
 import kr.or.ddit.vo.BoardBookVO;
 import kr.or.ddit.vo.PagingInfoVO;
 
@@ -22,23 +23,25 @@ import kr.or.ddit.vo.PagingInfoVO;
 public class BoardBookListController {
 	IBoardBookService service = new BoardBookServiceImpl();
 	
-	@URIMapping("/boardBook/boardBookList.do")
+	@URIMapping(value="/boardBook/boardBookList.do", method=HttpMethod.GET)
 	public String process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		System.out.println("sdfsdf");
 		PagingInfoVO<BoardBookVO> pagingVO = new PagingInfoVO<>();
 		long currentPage = 1;
 		String pageStr = req.getParameter("page");
 		if(StringUtils.isNumeric(pageStr)) {
 			currentPage = Long.parseLong(pageStr);
 		}
-		BoardBookVO boardBook = new BoardBookVO();
 		long boardBookCount = service.retrieveTotalRecord(pagingVO);
+		pagingVO.setTotalRecord(boardBookCount);
+		pagingVO.setCurrentPage(currentPage);
 		List<BoardBookVO>boardBookList = service.retrieveBoardBookList(pagingVO);
-		pagingVO.setTotalPage(boardBookCount);
 		pagingVO.setDataList(boardBookList);
 		
 		String accept = req.getHeader("Accept");
 		if(StringUtils.containsIgnoreCase(accept, "json")) {
 			ObjectMapper mapper = new ObjectMapper();
+			resp.setContentType("application/json;charset=UTF-8");
 			try(
 				PrintWriter out = resp.getWriter(); 
 			){
@@ -47,7 +50,12 @@ public class BoardBookListController {
 			return null;
 		}else {
 			req.setAttribute("pagingVO", pagingVO);
-			return "boardBook/boardBookList";
+			return "boardbook/boardbook";
 		}
 	}
+	@URIMapping(value="/boardBook/boardBookList.do", method=HttpMethod.POST)
+	public String post(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		return process(req, resp);
+	}
+	
 }

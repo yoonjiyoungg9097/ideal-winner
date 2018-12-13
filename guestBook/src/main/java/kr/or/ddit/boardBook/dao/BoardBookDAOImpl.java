@@ -15,15 +15,14 @@ public class BoardBookDAOImpl implements IBoardBookDAO {
 
 	@Override
 	public int insertBoardBook(BoardBookVO boardBook) {
-		return 0;
-//		try(
-//			SqlSession session = sqlSessionFactory.openSession();
-//		){
-//			IBoardBookDAO mapper = session.getMapper(IBoardBookDAO.class);
-//			int result = mapper.insertBoardBook(boardBook);
-//			if(result>0) session.commit();
-//			return result;
-//		}
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IBoardBookDAO mapper = session.getMapper(IBoardBookDAO.class);
+			int result = mapper.insertBoardBook(boardBook);
+			if(result>0) session.commit();
+			return result;
+		}
 	}
 	
 	@Override
@@ -38,13 +37,12 @@ public class BoardBookDAOImpl implements IBoardBookDAO {
 
 	@Override
 	public BoardBookVO selectBoardBook(long bo_no) {
-		return null;
-//		try(
-//			SqlSession session = sqlSessionFactory.openSession();
-//		){
-//			IBoardBookDAO mapper = session.getMapper(IBoardBookDAO.class);
-//			return mapper.selectBoardBook(bo_no);
-//		}
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IBoardBookDAO mapper = session.getMapper(IBoardBookDAO.class);
+			return mapper.selectBoardBook(bo_no);
+		}
 	}
 	
 	@Override
@@ -64,7 +62,14 @@ public class BoardBookDAOImpl implements IBoardBookDAO {
 
 	@Override
 	public int deleteBoardBook(long bo_no) {
-		return 0;
+		try(
+			SqlSession session = sqlSessionFactory.openSession();
+		){
+			IBoardBookDAO mapper = session.getMapper(IBoardBookDAO.class);
+			int result = mapper.deleteBoardBook(bo_no);
+			if(result>0)session.commit();
+			return result;
+		}
 	}
 
 

@@ -18,6 +18,6 @@ public interface IBoardBookService {
 	
 	public ServiceResult modifyBoardBook(BoardBookVO boardBook);
 	
-	public ServiceResult removeBoardBook(long bo_no);
+	public ServiceResult removeBoardBook(BoardBookVO boardBook);
 	
 }

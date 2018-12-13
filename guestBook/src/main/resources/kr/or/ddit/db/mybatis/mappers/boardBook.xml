@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.boardBook.dao.IBoardBookDAO">
-	<select id="selectTotalRecord" resultType="long" parameterType="pagingVO">
-		select count(*) from boardbook	
+	<select id="selectTotalRecord" resultType="long"
+		parameterType="pagingVO">
+		select count(*) from boardbook
+	</select>
+
+	<select id="selectBoardBookList" parameterType="pagingVO"
+		resultType="boardBookVO">
+		SELECT B.* FROM(SELECT A.*,ROWNUM RNUM FROM( SELECT BO_NO, BO_WRITER,
+		BO_PASS, BO_IP, BO_CONTENT,
+		BO_DATE FROM BOARDBOOK ORDER BY ROWID DESC)
+		A) B 
+		<![CDATA[	  
+	    WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+	    ]]>
 	</select>
 	
-	<select id="selectBoardBookList" parameterType="pagingVO" resultType="boardBookVO">
-		SELECT BO_NO, BOARD_WRITER, BO_PASS, BO_IP,
-			   BO_CONTENT, BO_DATE
+	<select id="selectBoardBook" parameterType="long" resultType="boardBookVO">
+		SELECT BO_NO, BO_WRITER,
+		BO_PASS, BO_IP, BO_CONTENT, BO_DATE
 		FROM BOARDBOOK
+		WHERE
+		BO_NO = #{bo_no}
 	</select>
-	
-<!-- 	<select id="selectBoardBook" parameterType="long" resultType="boardBookVO"> -->
-<!-- 		SELECT BO_NO, BOARD_WRITER, BO_PASS, BO_IP, -->
-<!-- 			   BO_MAIL, BO_TITLE, BO_CONTENT, -->
-<!-- 			   BO_DATE, BO_HIT, BO_RCMD -->
-<!-- 		FROM BOARDBOOK -->
-<!-- 		WHERE BO_NO = #{bo_no} -->
-<!-- 	</select> -->
+
+	<insert id="insertBoardBook" parameterType="boardBookVO">
+		INSERT INTO boardbook
+		(
+		bo_no, bo_writer, bo_pass,
+		bo_ip, bo_content, bo_date
+		) VALUES (
+		BOARDBOOK_SEQ.NEXTVAL, #{bo_writer}, #{bo_pass},
+		#{bo_ip},
+		#{bo_content}, SYSDATE
+		)
+	</insert>
+
+	<delete id="deleteBoardBook" parameterType="boardBookVO">
+		DELETE FROM boardbook
+		WHERE
+		bo_no = #{bo_no}
+	</delete>
+
 </mapper>
