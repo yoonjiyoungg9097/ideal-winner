@@ -17,6 +17,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FileUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilterWrapper;
 import com.sun.xml.internal.ws.message.MimeAttachmentSet;
 
 import kr.or.ddit.filter.wrapper.FileUploadRequestWrapper;
@@ -34,8 +35,13 @@ public class uploadImageController{
 		
 		if(!folder.exists())folder.mkdirs();
 		
-		if(req instanceof FileUploadRequestWrapper) {
-			FileItem fileItem = ((FileUploadRequestWrapper) req).getFileItem("upload");
+		HttpServletRequest request = req;
+		if(req instanceof XssEscapeServletFilterWrapper) {
+			request = (HttpServletRequest) ((XssEscapeServletFilterWrapper) req).getRequest();
+		}
+		
+		if(request instanceof FileUploadRequestWrapper) {
+			FileItem fileItem = ((FileUploadRequestWrapper) request).getFileItem("upload");
 			
 			UploadImageVO vo = new UploadImageVO();
 			if(fileItem!=null) {

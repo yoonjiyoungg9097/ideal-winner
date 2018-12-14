@@ -13,6 +13,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.lang3.StringUtils;
 
+import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilterWrapper;
+
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.board.service.BoardServiceImpl;
 import kr.or.ddit.board.service.IBoardService;
@@ -55,8 +57,13 @@ public class boardUpdateController{
     boolean valid=validator.validate(board, errors, UpdateGroup.class);
     String view="board/boardForm";
     if(valid) {
-       if(req instanceof FileUploadRequestWrapper) {
-          List<FileItem> fileItems= ((FileUploadRequestWrapper) req).getFileItems("bo_file");
+    	HttpServletRequest request = req;
+		if(req instanceof XssEscapeServletFilterWrapper) {
+			request = (HttpServletRequest) ((XssEscapeServletFilterWrapper) req).getRequest();
+		}
+    	
+       if(request instanceof FileUploadRequestWrapper) {
+          List<FileItem> fileItems= ((FileUploadRequestWrapper) request).getFileItems("bo_file");
           board.setItemList(fileItems);
        }
        ServiceResult res= service.modifyBoard(board);
