@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[3.7.3.201602250914-RELEASE]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
+	<configs>
+		<config>src/main/resources/kr/or/ddit/conf/firstDI.xml</config>
+		<config>src/main/resources/kr/or/ddit/conf/DIContainerDesc.xml</config>
+		<config>src/main/resources/kr/or/ddit/conf/variousDIContainer.xml</config>
+		<config>src/main/resources/kr/or/ddit/conf/collectionDIContainer.xml</config>
+		<config>src/main/resources/kr/or/ddit/conf/propertiesDesc.xml</config>
+		<config>src/main/resources/kr/or/ddit/conf/autoDI.xml</config>
+	</configs>
+	<autoconfigs>
+	</autoconfigs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- 스키마 종류 : beans, c, p, context, util --><!-- scope="prototype" value-type 생략하면 ?랑 같다 -->
+	<util:list id="sampleList" list-class="java.util.LinkedList"
+		value-type="java.lang.String">
+		<value>String1</value>
+		<bean class="java.util.Date" />
+	</util:list>
+
+	<util:map id="sampleMap" map-class="java.util.LinkedHashMap">
+		<entry key="key1" value="value1" />
+		<entry>
+			<key>
+				<bean class="java.text.SimpleDateFormat" c:pattern="yyyy-mm-dd" />
+			</key>
+			<bean class="java.util.Date"></bean>
+		</entry>
+	</util:map>
+
+	<util:set id="sampleSet" set-class="java.util.LinkedHashSet">
+		<value>String1</value>
+		<bean class="java.text.SimpleDateFormat" c:pattern="yyyy-mm-dd" />
+	</util:set>
+
+	<util:properties id="sampleProps">
+		<prop key="key1">value1</prop>
+	</util:properties>
+
+	<!-- FactoryBean 을 bean 으로 등록한 경우, -->
+	<!-- 해당 factoryBean 객체가 등록되지 않고, getObject() 메소드의 리턴 객체가 bean으로 등록됨 -->
+	<bean id="sampleArray" class="kr.or.ddit.factory.StringArrayFactoryBean"></bean>
+
+	<bean id="collectionDIVO1" class="kr.or.ddit.vo.CollectionDIVO"
+		c:sampleList-ref="sampleList" c:sampleMap-ref="sampleMap"
+		c:sampleSet-ref="sampleSet" c:sampleProps-ref="sampleProps"
+		c:sampleArray-ref="sampleArray">
+		<!-- <constructor-arg name="sampleArray"> -->
+		<!-- <array> -->
+		<!-- <value>String1</value> -->
+		<!-- <value>String2</value> -->
+		<!-- <value>String3</value> -->
+		<!-- </array> -->
+		<!-- </constructor-arg> -->
+		<!-- <constructor-arg name="sampleList"> -->
+		<!-- <list> -->
+		<!-- <value>String1</value> -->
+		<!-- <bean class="java.util.Date" /> -->
+		<!-- </list> -->
+		<!-- </constructor-arg> -->
+		<!-- <constructor-arg name="sampleSet"> -->
+		<!-- <set> -->
+		<!-- <value>String1</value> -->
+		<!-- <bean class="java.text.SimpleDateFormat" c:pattern="yyyy-mm-dd" /> -->
+		<!-- </set> -->
+		<!-- </constructor-arg> -->
+		<!-- <constructor-arg name="sampleMap"> -->
+		<!-- <map> -->
+		<!-- <entry key="key1" value="value1" /> -->
+		<!-- <entry> -->
+		<!-- <key> -->
+		<!-- <bean class="java.text.SimpleDateFormat" c:pattern="yyyy-mm-dd" /> -->
+		<!-- </key> -->
+		<!-- <bean class="java.util.Date"></bean> -->
+		<!-- </entry> -->
+		<!-- </map> -->
+		<!-- </constructor-arg> -->
+		<!-- <constructor-arg name="sampleProps"> -->
+		<!-- <props> -->
+		<!-- <prop key="key1">value1</prop> -->
+		<!-- </props> -->
+		<!-- </constructor-arg> -->
+	</bean>
+
+	<bean id="collectionDIVO2" class="kr.or.ddit.vo.CollectionDIVO"
+		p:sampleList-ref="sampleList" p:sampleMap-ref="sampleMap"
+		p:sampleSet-ref="sampleSet" p:sampleProps-ref="sampleProps"
+		p:sampleArray-ref="sampleArray">
+		<!-- <property name="sampleArray"> -->
+		<!-- <array> -->
+		<!-- <value>String1</value> -->
+		<!-- <value>String2</value> -->
+		<!-- <value>String3</value> -->
+		<!-- </array> -->
+		<!-- </property> -->
+		<!-- <property name="sampleList"> -->
+		<!-- <list> -->
+		<!-- <value>String1</value> -->
+		<!-- <bean class="java.util.Date" /> -->
+		<!-- </list> -->
+		<!-- </property> -->
+		<!-- <property name="sampleSet"> -->
+		<!-- <set> -->
+		<!-- <value>String1</value> -->
+		<!-- <bean class="java.text.SimpleDateFormat" c:pattern="yyyy-mm-dd" /> -->
+		<!-- </set> -->
+		<!-- </property> -->
+		<!-- <property name="sampleMap"> -->
+		<!-- <map> -->
+		<!-- <entry key="key1" value="value1" /> -->
+		<!-- <entry> -->
+		<!-- <key> -->
+		<!-- <bean class="java.text.SimpleDateFormat" c:pattern="yyyy-mm-dd" /> -->
+		<!-- </key> -->
+		<!-- <bean class="java.util.Date"></bean> -->
+		<!-- </entry> -->
+		<!-- </map> -->
+		<!-- </property> -->
+		<!-- <property name="sampleProps"> -->
+		<!-- <props> -->
+		<!-- <prop key="key1">value1</prop> -->
+		<!-- </props> -->
+		<!-- </property> -->
+	</bean>
+</beans>

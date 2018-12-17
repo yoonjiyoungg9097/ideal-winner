@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<bean id="sampleFile" class="java.io.File"
+		c:pathname="D:/saveFiles"
+	/>
+
+	<bean id="variousDIVO1" class="kr.or.ddit.vo.VariousDIVO" 
+		p:charVar="a"
+		p:intNumber="45"
+		p:dblNumber="2.4"
+		p:str="문자열"
+		p:sampleFile-ref="sampleFile"
+	/>
+
+	<bean id="variousDIVO2" class="kr.or.ddit.vo.VariousDIVO" 
+		c:charVar="a"
+		c:intNumber="45"
+		c:dblNumber="2.4"
+		c:str="문자열"
+		c:sampleFile-ref="sampleFile"
+	/>
+</beans>
