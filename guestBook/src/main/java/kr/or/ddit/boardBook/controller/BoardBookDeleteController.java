@@ -36,10 +36,8 @@ public class BoardBookDeleteController {
 			view = "/boardbook/boardbookList";
 			break;
 		case INVALIDPASSWORD:
-			view="";
 			break;
 		default:
-			view="";
 			break;
 		}
 		return view;

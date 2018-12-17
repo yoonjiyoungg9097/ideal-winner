@@ -38,9 +38,17 @@ public class BoardBookServiceImpl implements IBoardBookService {
 	
 	@Override
 	public ServiceResult modifyBoardBook(BoardBookVO boardBook) {
-		ServiceResult serviceResult;
-		int result = boardBookDAO.updateBoardBook(boardBook);
-		return null;
+		ServiceResult serviceResult = ServiceResult.INVALIDPASSWORD;
+		BoardBookVO boardBookVO = boardBookDAO.selectBoardBook(boardBook.getBo_no());
+		if(boardBookVO.getBo_pass().equals(boardBook.getBo_pass())) {
+			int result = boardBookDAO.updateBoardBook(boardBook);
+			if(result>0) {
+				serviceResult = ServiceResult.OK;
+			}else {
+				serviceResult = ServiceResult.FAILED;
+			}
+		}
+		return serviceResult;
 	}
 
 	@Override
